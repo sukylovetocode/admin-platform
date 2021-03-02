@@ -2,10 +2,10 @@
 
 后台管理系统目标
 
-[ ] 权限管理
+[ ] 权限管理 多项目
 [ ] 动态渲染菜单
 [ ] 全局颜色更换
-[ ] 支持国际化
+[x] 支持国际化
 [ ] 富文本编辑/MD 写法切换
 [ ] 渲染表格以及能够导入及导出 Excel 表格
 [ ] 第三方登录
@@ -16,6 +16,49 @@
 [ ] 能够调用电脑摄像头进行人脸注册及识别
 [ ] 支持动画导入
 [ ] 邮箱订阅功能
+[ ] 进行 Axios 封装
+[x] 按需引入 Element-ui
+
+### 按需引入 Element-ui
+
+element-ui 说到的的那个`babel-preset-es2015`有 BUG，已经完全不支持现在的`babel7`系列了，那我们现在要按需加载就要
+
+##### 下载 babel-plugin-component & @babel/preset-env
+
+`npm install babel-plugin-component @babel/preset-env -D`
+
+##### 配置 babelrc 或者 babel.config.js
+
+```json
+{
+    "presets": [["@babel/preset-env", { "modules": false }]],
+    "plugins": [
+        [
+            "component",
+            {
+                "libraryName": "element-ui",
+                "styleLibraryName": "theme-chalk"
+            }
+        ]
+    ]
+}
+```
+
+##### 引入按需加载组件
+
+```javascript
+// 按需注册Element-ui 不需另外注册事件
+import Vue from 'vue';
+import { Container } from 'element-ui';
+
+Vue.use(Container);
+```
+
+### 环境变量储存
+
+https://cli.vuejs.org/zh/guide/mode-and-env.html#%E7%A4%BA%E4%BE%8B%EF%BC%9Astaging-%E6%A8%A1%E5%BC%8F
+
+值得注意的是，只有我们定义的带`VUE_APP_`开头的变量才能被 vue-cli 正确读取
 
 ### 富文本编辑
 
@@ -57,4 +100,37 @@
     "arrowParens": "always",
     "singleQuote": true
 }
+```
+
+### 支持国际化
+
+`npm install vue-i18n`
+
+```javascript
+import VueI18n from 'vue-i18n';
+
+Vue.use(VueI18n);
+
+const i18n = new VueI18n({
+    locale: 'CN',
+    messages: {
+        CN: require('@/locale/zh_CN'),
+        EN: require('@/locale/en_US'),
+    },
+});
+
+new Vue({
+    router,
+    store,
+    i18n, // 需要引入
+    render: (h) => h(App),
+}).$mount('#app');
+```
+
+```javascript
+module.exports = {
+    login: {
+        // our data
+    },
+};
 ```
