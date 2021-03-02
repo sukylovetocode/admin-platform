@@ -91,4 +91,6 @@ const router = new VueRouter({
     routes: defaultRoutes,
 });
 
+router.addRoutes(asyncRoutes)
+
 export default router;

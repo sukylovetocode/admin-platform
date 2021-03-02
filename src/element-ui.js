@@ -21,6 +21,7 @@ import {
     Dropdown,
     DropdownMenu,
     DropdownItem,
+    Switch
 } from 'element-ui';
 
 Vue.use(Container);
@@ -43,3 +44,4 @@ Vue.use(Avatar);
 Vue.use(Dropdown);
 Vue.use(DropdownMenu);
 Vue.use(DropdownItem);
+Vue.use(Switch)
