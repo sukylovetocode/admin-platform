@@ -18,6 +18,11 @@
 [ ] 邮箱订阅功能
 [ ] 进行 Axios 封装
 [x] 按需引入 Element-ui
+[ ] 图片懒加载
+
+### 权限管理
+
+vue-element-admin 做法 我的做法 有什么问题 addRoutes 刷新页面无效显示 404
 
 ### 按需引入 Element-ui
 
@@ -134,3 +139,11 @@ module.exports = {
     },
 };
 ```
+
+### 图片懒加载
+
+-   计算元素的高度监听器遍历加载
+    检测图片是否在视口中
+-   Intersection Observer API 兼容性值得考究
+
+难点: 图片是否已经插入 DOM 中，如果未插入高度为 0，无法监听图片位置

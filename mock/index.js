@@ -28,7 +28,10 @@ router.post('/api/user/login', (ctx) => {
         ) {
             ctx.body = {
                 status: 200,
-                token: 'adminLogin',
+                info: {
+                    name: 'admin',
+                    avatar: '1.png',
+                },
             };
         } else {
             ctx.body = {
@@ -36,6 +39,32 @@ router.post('/api/user/login', (ctx) => {
             };
         }
     });
+});
+
+router.get('/api/user/info', (ctx) => {
+    ctx.body = {
+        status: 200,
+        info: {
+            name: 'admin',
+            avatar: '1.png',
+        },
+    };
+});
+
+router.get('/api/user/permission', (ctx) => {
+    ctx.body = {
+        status: 200,
+        permissions: [
+            '/dashboard',
+            '/dashboard/features',
+            '/dashboard/features/lottie',
+            '/dashboard/features/copypaste',
+            '/dashboard/features/excel',
+            '/dashboard/features/markdown',
+            '/dashboard/features/richtext',
+            '/dashboard/features/utilspackage',
+        ],
+    };
 });
 
 app.listen(3000, () => {

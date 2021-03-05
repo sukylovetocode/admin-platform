@@ -7,20 +7,22 @@
                 </h3>
                 <h2>{{ $t('login.title') }}</h2>
                 <p>{{ $t('login.sub') }}</p>
-                <el-form>
-                    <label class="login_label">你的用户名</label>
-                    <el-input
-                        v-model="loginForm.user"
-                        class="login_input"
-                    ></el-input>
-                    <label class="login_label">你的密码</label>
-                    <el-input
-                        v-model="loginForm.pwd"
-                        class="login_input"
-                    ></el-input>
-                    <el-checkbox v-model="logged" class="login_keep"
-                        >保持登录</el-checkbox
-                    >
+                <el-form ref="loginForm" :model="loginForm" :rules="rules">
+                    <el-form-item prop="user">
+                        <label class="login_label">你的用户名</label>
+                        <el-input
+                            v-model="loginForm.user"
+                            class="login_input"
+                        ></el-input>
+                    </el-form-item>
+                    <el-form-item prop="pwd">
+                        <label class="login_label">你的密码</label>
+                        <el-input
+                            v-model="loginForm.pwd"
+                            class="login_input"
+                            type="password"
+                        ></el-input>
+                    </el-form-item>
                     <el-button
                         type="primary"
                         class="login_submit"
@@ -29,7 +31,10 @@
                     >
                 </el-form>
                 <p>
-                    没有账号<el-button type="text" class="login_register"
+                    没有账号<el-button
+                        type="text"
+                        class="login_register"
+                        @click="handleRegister"
                         >注册</el-button
                     >
                 </p>
@@ -54,50 +59,69 @@ gsap.registerPlugin(CSSPlugin);
 
 export default {
     data() {
+        this.rules = {
+            user: [{ required: true, message: '用户名不能为空' }],
+            pwd: [{ required: true, message: '密码不能为空' }],
+        };
         return {
             loginForm: {
                 pwd: '',
                 user: '',
             },
-            logged: false,
         };
     },
     methods: {
-        handleLogin() {
+        loginSuccess() {
             var that = this;
-            this.$store.dispatch('User/login', this.loginForm).then((res) => {
-                if (res.status === 200) {
-                    gsap.fromTo(
-                        '.login_right',
-                        {
-                            width: '50%',
-                            opacity: '100%',
-                        },
-                        {
-                            width: 0,
-                            opacity: 0,
-                            duration: 1.5,
-                            ease: 'expo.out',
-                        }
-                    );
-                    gsap.fromTo(
-                        '.login_left',
-                        {
-                            width: '50%',
-                            opacity: '100%',
-                        },
-                        {
-                            width: '100%',
-                            opacity: 0,
-                            duration: 1.5,
-                            onComplete: function() {
-                                that.$router.push('/dashboard');
-                            },
-                            ease: 'expo.out',
-                        }
-                    );
+            gsap.fromTo(
+                '.login_right',
+                {
+                    width: '50%',
+                    opacity: '100%',
+                },
+                {
+                    width: 0,
+                    opacity: 0,
+                    duration: 1.5,
+                    ease: 'expo.out',
+                }
+            );
+            gsap.fromTo(
+                '.login_left',
+                {
+                    width: '50%',
+                    opacity: '100%',
+                },
+                {
+                    width: '100%',
+                    opacity: 0,
+                    duration: 1.5,
+                    onComplete: function() {
+                        that.$router.push('/dashboard');
+                    },
+                    ease: 'expo.out',
+                }
+            );
+        },
+        handleLogin() {
+            // 自定义校验
+            this.$refs.loginForm.validate((valid) => {
+                if (valid) {
+                    // 假如要保持登录就需要保存cookies
+                    this.$store
+                        .dispatch('user/login', this.loginForm)
+                        .then((res) => {
+                            if (res.status === 200) {
+                                this.loginSuccess();
+                            }
+                        });
+                } else {
+                    this.$message('你的登录框没有填写完整');
                 }
             });
+        },
+        handleRegister() {
+            this.$router.push('/register');
         },
     },
 };

@@ -1,39 +1,67 @@
 <template>
     <el-row>
-        <el-col :lg="12" :sm="24" class="login_left">
-            <div class="login_content">
-                <h3 class="login_logo">
-                    <i class="el-icon-eleme"></i>{{ $t('login.logo') }}
-                </h3>
-                <h2>{{ $t('login.title') }}</h2>
-                <p>{{ $t('login.sub') }}</p>
-                <el-form>
-                    <label class="login_label">你的邮箱</label>
-                    <el-input v-model="mail" class="login_input"></el-input>
-                    <label class="login_label">你的密码</label>
-                    <el-input v-model="pwd" class="login_input"></el-input>
-                    <el-checkbox v-model="logged" class="login_keep"
-                        >保持登录</el-checkbox
-                    >
+        <el-col :lg="12" :sm="24" class="register_left">
+            <div class="register_content">
+                <h3 class="register_logo"><i class="el-icon-eleme"></i>商标</h3>
+                <h2>现在注册</h2>
+                <p>输入你的信息以注册新账号</p>
+                <el-form
+                    :model="registerForm"
+                    :rules="rules"
+                    ref="registerForm"
+                >
+                    <el-form-item prop="mail">
+                        <label class="register_label">你的邮箱</label>
+                        <el-input
+                            v-model="registerForm.mail"
+                            class="register_input"
+                        ></el-input>
+                    </el-form-item>
+                    <el-form-item prop="user">
+                        <label class="register_label">你的用户名</label>
+                        <el-input
+                            v-model="registerForm.user"
+                            class="register_input"
+                        ></el-input>
+                    </el-form-item>
+                    <el-form-item prop="pwd">
+                        <label class="register_label">你的密码</label>
+                        <el-input
+                            v-model="registerForm.pwd"
+                            class="register_input"
+                            type="password"
+                        ></el-input>
+                    </el-form-item>
+                    <el-form-item prop="confirmpwd">
+                        <label class="register_label">确认密码</label>
+                        <el-input
+                            v-model="registerForm.confirmpwd"
+                            class="register_input"
+                            type="password"
+                        ></el-input>
+                    </el-form-item>
+
                     <el-button
                         type="primary"
-                        class="login_submit"
-                        @click="handleLogin"
-                        >登录</el-button
+                        class="register_submit"
+                        @click="handleRegister"
+                        >注册</el-button
                     >
                 </el-form>
                 <p>
-                    没有账号<el-button type="text" class="login_register"
-                        >注册</el-button
+                    已有账号<el-button
+                        type="text"
+                        class="register_register"
+                        @click="handleLogin"
+                        >登录</el-button
                     >
                 </p>
-                <el-button type="text">第三方登录</el-button>
             </div>
         </el-col>
-        <el-col :lg="12" :sm="24" class="login_right"
-            ><div class="login_bg">
+        <el-col :lg="12" :sm="24" class="register_right"
+            ><div class="register_bg">
                 <img
-                    class="login_pic"
+                    class="register_pic"
                     src="@/assets/login-right.png"
                     alt=""
                 /></div
@@ -48,95 +76,97 @@ gsap.registerPlugin(CSSPlugin);
 
 export default {
     data() {
+        this.samePwd = (rule, value, callback) => {
+            if (this.registerForm.pwd !== this.registerForm.confirmpwd) {
+                callback(new Error('两次输入密码不一致'));
+            } else {
+                callback();
+            }
+        };
+        this.rules = {
+            user: [{ required: true, message: '用户名不能为空' }],
+            pwd: [{ required: true, message: '密码不能为空' }],
+            confirmpwd: [
+                { required: true, message: '确认密码不能为空' },
+                { validator: this.samePwd, trigger: 'blur' },
+            ],
+            mail: [
+                { required: true, message: '邮箱不能为空' },
+                {
+                    /* eslint-disable-next-line no-useless-escape */
+                    pattern: /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/,
+                    message: '你的邮箱格式不正确',
+                },
+            ],
+        };
         return {
-            pwd: '',
-            mail: '',
-            logged: false,
+            registerForm: {
+                pwd: '',
+                mail: '',
+                user: '',
+                confirmpwd: '',
+            },
         };
     },
     methods: {
+        handleRegister() {
+            this.$refs.registerForm.validate((valid) => {
+                console.log(valid);
+            });
+        },
         handleLogin() {
-            var that = this;
-            gsap.fromTo(
-                '.login_right',
-                {
-                    width: '50%',
-                    opacity: '100%',
-                },
-                {
-                    width: 0,
-                    opacity: 0,
-                    duration: 1.5,
-                    ease: 'expo.out',
-                }
-            );
-            gsap.fromTo(
-                '.login_left',
-                {
-                    width: '50%',
-                    opacity: '100%',
-                },
-                {
-                    width: '100%',
-                    opacity: 0,
-                    duration: 1.5,
-                    onComplete: function() {
-                        that.$router.push('/dashboard');
-                    },
-                    ease: 'expo.out',
-                }
-            );
+            this.$router.push('/login');
         },
     },
 };
 </script>
 
 <style lang="css">
-.login_left {
+.register_left {
     padding: 20px;
     line-height: 30px;
     height: 100vh;
     position: relative;
 }
-.login_content {
+.register_content {
     position: absolute;
     left: 50%;
     top: 35%;
     transform: translate(-50%, -50%);
     width: 50%;
 }
-.login_logo {
+.register_logo {
     color: #409eff;
     font-size: 30px;
     margin-bottom: 10px;
 }
-.login_logo i {
+.register_logo i {
     padding-right: 5px;
 }
-.login_label {
+.register_label {
     font-size: 14px;
     color: #909399;
 }
-.login_input {
+.register_input {
     width: 100%;
     display: block;
 }
-.login_keep {
+.register_keep {
     display: block;
     margin: 10px 0;
 }
-.login_submit {
+.register_submit {
     width: 100%;
 }
-.login_register {
+.register_register {
     margin: 5px;
 }
-.login_bg {
+.register_bg {
     background: #409eff;
     height: 100vh;
     position: relative;
 }
-.login_pic {
+.register_pic {
     position: absolute;
     left: 50%;
     top: 50%;
@@ -144,10 +174,10 @@ export default {
     width: 560px;
 }
 @media screen and (max-width: 400px) {
-    .login_right {
+    .register_right {
         display: none;
     }
-    .login_content {
+    .register_content {
         width: 80%;
     }
 }

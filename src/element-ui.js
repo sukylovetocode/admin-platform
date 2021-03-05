@@ -16,12 +16,15 @@ import {
     MenuItemGroup,
     Icon,
     Form,
+    FormItem,
     Checkbox,
     Avatar,
     Dropdown,
     DropdownMenu,
     DropdownItem,
-    Switch
+    Table,
+    TableColumn,
+    Message,
 } from 'element-ui';
 
 Vue.use(Container);
@@ -39,9 +42,13 @@ Vue.use(MenuItem);
 Vue.use(MenuItemGroup);
 Vue.use(Icon);
 Vue.use(Form);
+Vue.use(FormItem);
 Vue.use(Checkbox);
 Vue.use(Avatar);
 Vue.use(Dropdown);
 Vue.use(DropdownMenu);
 Vue.use(DropdownItem);
-Vue.use(Switch)
+Vue.use(Table);
+Vue.use(TableColumn);
+
+Vue.prototype.$message = Message;

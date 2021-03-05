@@ -11,3 +11,12 @@ export function setCookies(key, name) {
 export function removeCookies(key) {
     return Cookies.remove(key);
 }
+
+export function getViewHeight() {
+    /* IE8以下不支持window.innerHeight 属性 */
+    return (
+        window.innerHeight ||
+        document.documentElement.clientHeight ||
+        document.body.clientHeight
+    );
+}
