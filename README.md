@@ -11,7 +11,7 @@
 [ ] 第三方登录
 [ ] 图表渲染 echart /g2
 [ ] 分步表单提交
-[ ] 复制粘贴功能
+[X] 复制粘贴功能
 [ ] 全屏展示
 [ ] 能够调用电脑摄像头进行人脸注册及识别
 [ ] 支持动画导入
@@ -69,11 +69,11 @@ https://cli.vuejs.org/zh/guide/mode-and-env.html#%E7%A4%BA%E4%BE%8B%EF%BC%9Astag
 
 富文本实现原理：
 
--   textarea 上定位各种样式
--   实现自己的布局引擎
+-   textarea 上定位各种样式 document.execCommand(问题：换行处理、键盘事件、指令行为不一致)
+-   实现自己的布局引擎 （slate中通过一个虚拟DOM交互构建一个model，能随意植入插件，immutable不可变状态）
 -   使用浏览器的 ContentEditable（会破坏我们的数据结构，自动插入垃圾标签）
 
-本来想用 slate.js 进行开发的，但是看了下作者现阶段并没有意愿去维护 VUE 版本的，只有一个别人写的 VUE 库，所以最后还是选择了老牌的 tinymce. 关于 slate.js 的介绍可以参考[这个文章](https://juejin.cn/post/6844903504478208007)
+本来想用 slate.js 进行开发的，但是看了下作者现阶段并没有意愿去维护 VUE 版本的，只有一个别人写的 VUE 库，要使用可能要自己根据slate-react进行构建，所以最后还是选择了老牌的 tinymce. 关于 slate.js 的介绍可以参考[这个文章](https://juejin.cn/post/6844903504478208007)
 
 #### 希望我们富文本能够实现的功能
 

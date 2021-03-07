@@ -1,5 +1,6 @@
 <template>
     <div id="editor" ></div>
+    <a href="https://www.tiny.cloud/docs/demo/full-featured/">官网</a>
 </template>
 
 <script>

@@ -1,9 +1,7 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import BaseLayout from '@/layouts/baseLayout';
-
 Vue.use(VueRouter);
-
 const defaultRoutes = [
     {
         path: '/',
