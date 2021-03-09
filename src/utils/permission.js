@@ -1,23 +1,31 @@
-export function generateRoutes(asyncRoutes, accessRoutes) {
-    let combineRoutes = [];
-    asyncRoutes.forEach((route) => {
-        let tmp = { ...route };
-        if (hasPermission(accessRoutes, route)) {
-            if (tmp.children) {
-                tmp.children = generateRoutes(tmp.children, accessRoutes);
+import _import from '@/router/modules/router_map';
+
+/**
+ *
+ * @param {Array} accessRoutes 后端获取到的路由
+ * @returns
+ */
+export function generateRoutes(accessRoutes) {
+    // 借助引用赋值来进行树形递归
+    var map = {};
+    var treeData = [];
+    accessRoutes.forEach(function(item) {
+        // 放置插件
+        map[item.id] = item;
+        map[item.id]['component'] = _import(item['component']);
+    });
+    accessRoutes.forEach(function(item) {
+        var parent = map[item.pid];
+        if (parent) {
+            if (parent.children) {
+                parent.children.push(item);
+            } else {
+                parent.children = [];
+                parent.children.push(item);
             }
-            combineRoutes.push(tmp);
-        } else if (!tmp.component) {
-            combineRoutes.push(tmp);
+        } else {
+            treeData.push(item);
         }
     });
-    return combineRoutes;
-}
-
-function hasPermission(accessRoutes, route) {
-    if (accessRoutes.some((item) => item === route.path)) {
-        return true;
-    } else {
-        return false;
-    }
+    return treeData;
 }

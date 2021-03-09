@@ -97,7 +97,7 @@ export default {
                     opacity: 0,
                     duration: 1.5,
                     onComplete: function() {
-                        that.$router.push('/dashboard');
+                        that.$router.push('/features/lottie');
                     },
                     ease: 'expo.out',
                 }

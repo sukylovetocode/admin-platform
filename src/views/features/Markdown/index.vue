@@ -1,6 +1,12 @@
 <template>
     <div>
-        <h5>https://github.com/nhn/tui.editor/tree/master/apps/vue-editor</h5>
+        <h3>
+            插件:tui.editor
+            <a
+                href="https://github.com/nhn/tui.editor/tree/master/apps/vue-editor"
+                >文档链接</a
+            >
+        </h3>
         <editor :options="defaultOptions" height="500px" />
     </div>
 </template>

@@ -2,16 +2,15 @@
     <div class="my-menu">
         <h3 class="my-menu-admin">简单后台</h3>
         <el-menu
-            default-active="2"
             class="my_menu_left"
-            @open="handleOpen"
-            @close="handleClose"
             @select="handleSelect"
+            v-if="active_app.children"
         >
             <menu-item
-                v-for="(item, index) in hasPermission"
+                v-for="(item, index) in active_app.children"
                 :key="index"
                 :item="item"
+                topMenu="false"
             ></menu-item>
         </el-menu>
     </div>
@@ -22,14 +21,12 @@ import MenuItem from './components/menuItem';
 import { mapGetters } from 'vuex';
 export default {
     methods: {
-        handleClose() {},
-        handleOpen() {},
         handleSelect(index) {
             this.$router.push(index);
         },
     },
     computed: {
-        ...mapGetters(['hasPermission']),
+        ...mapGetters(['active_app']),
     },
     components: {
         MenuItem,

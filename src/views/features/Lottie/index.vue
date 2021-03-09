@@ -1,5 +1,6 @@
 <template>
     <div>
+        <h2>配合AE插件：bodymovin</h2>
         <div id="anim1" style="width:100px"></div>
         <el-button @click="stop">stop</el-button>
         <el-button @click="play">play</el-button>
@@ -14,7 +15,6 @@
             :animJson="require('../../../assets/anim/anim1.json')"
         ></anim-container>
         <a href="http://airbnb.io/lottie/#/web">参考文档</a>
-        <h2>AE插件：bodymovin</h2>
     </div>
 </template>
 

@@ -1,11 +1,12 @@
 import { userLogin, userInfo, userPermission } from '@/api/user'; // eslint-disable-line no-unused-vars
 import { setCookies } from '@/utils/base';
 import { generateRoutes } from '@/utils/permission';
-import { asyncRoutes } from '@/router';
+
 const state = {
     token: '',
     info: {},
     permission: [],
+    active_app: '/features',
 };
 
 const mutations = {
@@ -17,6 +18,9 @@ const mutations = {
     },
     USER_PERMISSION: (state, permission) => {
         state.permission = permission;
+    },
+    ACTIVE_APP: (state, app) => {
+        state.active_app = app;
     },
 };
 const actions = {
@@ -52,18 +56,17 @@ const actions = {
         return new Promise((resolve, reject) => {
             userPermission()
                 .then((res) => {
-                    const routes = generateRoutes(
-                        asyncRoutes,
-                        res.data.permissions
-                    );
+                    const routes = generateRoutes(res.data.permissions);
                     commit('USER_PERMISSION', routes);
-                    console.log(routes);
                     resolve(routes);
                 })
                 .catch((err) => {
                     reject(err);
                 });
         });
+    },
+    active_app({ commit }, app) {
+        commit('ACTIVE_APP', app);
     },
 };
 export default {
