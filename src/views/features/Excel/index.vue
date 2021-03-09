@@ -1,7 +1,9 @@
 <template>
     <div>
         <el-button type="primary" @click="handleExport">导出表格</el-button>
-        <el-button>导入表格</el-button>
+        <a href="https://docs.sheetjs.com/#writing-functions">文档</a>
+        单文件上传：<input type="file" id="fileUp" @change="handleImport" />
+
         <el-table
             :data="tableData"
             stripe
@@ -21,7 +23,10 @@
 </template>
 
 <script>
+// eslint-disable-next-line no-unused-vars
 import { createSheets, formatJson } from '@/utils/excel';
+// eslint-disable-next-line no-unused-vars
+import Xlsx from 'xlsx';
 
 const tableHead = [
     {
@@ -69,15 +74,33 @@ export default {
     },
     methods: {
         handleExport() {
-            let head = tableHead.map((item) => item.name);
-            let a = [];
-            a.push(head);
-            let data = formatJson(head, tableData);
-            a.push(...data);
-            createSheets(a, 'excel.xlsx');
+            // let head = tableHead.map((item) => item.name);
+            // let a = [];
+            // a.push(head);
+            // let data = formatJson(head, tableData);
+            // a.push(...data);
+            createSheets(this.selections, 'excel.xlsx');
         },
         handleSelectionChange(rows) {
             this.selections = rows;
+            console.log(rows);
+        },
+        handleImport(e) {
+            // 获取文档
+            let file = e.target.files[0];
+            let reader = new FileReader();
+            reader.onload = function(e) {
+                let data = e.target.result;
+                let wb = Xlsx.read(data, {
+                    type: 'binary',
+                });
+                console.log(
+                    JSON.stringify(
+                        Xlsx.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]])
+                    )
+                );
+            };
+            reader.readAsBinaryString(file);
         },
     },
 };

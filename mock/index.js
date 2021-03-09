@@ -186,6 +186,19 @@ router.get('/api/user/permission', (ctx) => {
                 },
                 component: 'Excel',
             },
+            {
+                id: 12,
+                path: '/features/share',
+                pid: 1,
+                menu: 1,
+                meta: {
+                    title: '分享',
+                    icon: 'el-icon-share',
+                },
+                topMenu: false,
+                name: 'Share',
+                component: 'Share',
+            },
         ],
     };
 });

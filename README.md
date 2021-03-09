@@ -6,7 +6,7 @@
 [ ] 动态渲染菜单
 [ ] 全局颜色更换
 [x] 支持国际化
-[ ] 富文本编辑/MD 写法切换
+[x] 富文本编辑/MD 写法切换
 [ ] 渲染表格以及能够导入及导出 Excel 表格
 [ ] 第三方登录
 [ ] 图表渲染 echart /g2
@@ -14,11 +14,12 @@
 [X] 复制粘贴功能
 [ ] 全屏展示
 [ ] 能够调用电脑摄像头进行人脸注册及识别
-[ ] 支持动画导入
+[x] 支持动画导入
 [ ] 邮箱订阅功能
-[ ] 进行 Axios 封装
+[x] 进行 Axios 封装
 [x] 按需引入 Element-ui
-[ ] 图片懒加载
+[x] 图片懒加载
+[ ] 聊天 demo
 
 ### 权限管理
 
@@ -71,10 +72,10 @@ https://cli.vuejs.org/zh/guide/mode-and-env.html#%E7%A4%BA%E4%BE%8B%EF%BC%9Astag
 富文本实现原理：
 
 -   textarea 上定位各种样式 document.execCommand(问题：换行处理、键盘事件、指令行为不一致)
--   实现自己的布局引擎 （slate中通过一个虚拟DOM交互构建一个model，能随意植入插件，immutable不可变状态）
+-   实现自己的布局引擎 （slate 中通过一个虚拟 DOM 交互构建一个 model，能随意植入插件，immutable 不可变状态）
 -   使用浏览器的 ContentEditable（会破坏我们的数据结构，自动插入垃圾标签）
 
-本来想用 slate.js 进行开发的，但是看了下作者现阶段并没有意愿去维护 VUE 版本的，只有一个别人写的 VUE 库，要使用可能要自己根据slate-react进行构建，所以最后还是选择了老牌的 tinymce. 关于 slate.js 的介绍可以参考[这个文章](https://juejin.cn/post/6844903504478208007)
+本来想用 slate.js 进行开发的，但是看了下作者现阶段并没有意愿去维护 VUE 版本的，只有一个别人写的 VUE 库，要使用可能要自己根据 slate-react 进行构建，所以最后还是选择了老牌的 tinymce. 关于 slate.js 的介绍可以参考[这个文章](https://juejin.cn/post/6844903504478208007)
 
 #### 希望我们富文本能够实现的功能
 
@@ -88,6 +89,34 @@ https://cli.vuejs.org/zh/guide/mode-and-env.html#%E7%A4%BA%E4%BE%8B%EF%BC%9Astag
 -   能够传视频
 
 ### 渲染表格以及能够导入及导出 Excel 表格
+
+说到表格我们无法避过一个强大的库: js-xlsx，就是这个强大的库让我们在浏览器中能够简单的进行表格的引入以及导出.先说下简单的 API 使用方法
+
+```javascript
+// 创建工作簿
+const workbook = Xlsx.utils.book_new();
+// 二维数组转换成工作表对象
+// const worksheet = Xlsx.utils.aoa_to_sheet(data);
+// 对象换成工作表
+const worksheet = Xlsx.utils.json_to_sheet(data);
+// 将工作表添加到工作簿中
+Xlsx.utils.book_append_sheet(workbook, worksheet, sheetName);
+// 工作簿导出
+Xlsx.writeFile(workbook, filename);
+
+// 表格读取
+let reader = new FileReader();
+reader.onload = function(e) {
+    let data = e.target.result;
+    //以二进制方法读取
+    let wb = Xlsx.read(data, {
+        type: 'binary',
+    });
+    // 将单元格内容转化成json
+    JSON.stringify(Xlsx.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]));
+};
+reader.readAsBinaryString(file);
+```
 
 ### 使用 prettier 格式化我们文件
 

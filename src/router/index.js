@@ -1,8 +1,9 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
+import BaseLayout from '@/layouts/baseLayout';
 
 Vue.use(VueRouter);
-const defaultRoutes = [
+export const defaultRoutes = [
     {
         path: '/',
         component: { render: (h) => h('router-view') },
@@ -32,6 +33,19 @@ const defaultRoutes = [
                     import(
                         /* webpackChunkName: "default" */ '../views/Register/index.vue'
                     ),
+            },
+            {
+                path: '/demo',
+                name: 'ChatingBoard',
+                component: BaseLayout,
+                children: [
+                    {
+                        path: '/demo/chating-board',
+                        name: 'ChatingBoard',
+                        component: () =>
+                            import('@/views/demo/chating-board/index.vue'),
+                    },
+                ],
             },
         ],
     },

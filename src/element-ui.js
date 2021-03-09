@@ -25,6 +25,10 @@ import {
     Table,
     TableColumn,
     Message,
+    Popover,
+    Select,
+    Option,
+    Tag,
 } from 'element-ui';
 
 Vue.use(Container);
@@ -50,5 +54,9 @@ Vue.use(DropdownMenu);
 Vue.use(DropdownItem);
 Vue.use(Table);
 Vue.use(TableColumn);
+Vue.use(Popover);
+Vue.use(Tag);
+Vue.use(Select);
+Vue.use(Option);
 
 Vue.prototype.$message = Message;

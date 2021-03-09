@@ -1,8 +1,10 @@
 import router from './router';
+import { defaultRoutes } from './router';
 import Nprogress from 'nprogress';
 import 'nprogress/nprogress.css';
 import { getCookies } from '@/utils/base';
 import store from './store';
+import VueRouter from 'vue-router';
 
 async function initRouter() {
     const token = await getCookies('token');
@@ -11,10 +13,20 @@ async function initRouter() {
         // 查看用户权限
         store.dispatch('user/permission').then((res) => {
             // 生成我们路由
-            router.addRoutes(res);
+            router.$addRoutes(res);
         });
     }
 }
+
+// 添加自己方法，否则addRoutes没有删除路由中原来的路由，会出现duplicate named routes错误
+router.$addRoutes = (params) => {
+    router.matcher = new VueRouter({
+        mode: 'history',
+        base: process.env.BASE_URL,
+        routes: defaultRoutes,
+    }).matcher;
+    router.addRoutes(params);
+};
 
 // 解决刷新后会404问题
 router.onReady(() => {
@@ -40,7 +52,12 @@ router.beforeEach(async (to, from, next) => {
             Nprogress.done();
         }
     } else {
-        next();
+        if (store.getters.hasPermission.length <= 0) {
+            initRouter();
+            next();
+        } else {
+            next();
+        }
     }
 });
 

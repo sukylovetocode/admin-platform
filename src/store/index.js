@@ -28,7 +28,6 @@ export default new Vuex.Store({
         hasPermission: (state) => state.user.permission,
         active_app: (state) => {
             let obj;
-            console.log(state.user.active_app);
             state.user.permission.forEach((item) => {
                 if (item.path === state.user.active_app) {
                     obj = item;

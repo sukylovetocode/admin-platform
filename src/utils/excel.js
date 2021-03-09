@@ -15,9 +15,11 @@ export function createSheets(data, filename) {
     // 创建工作簿
     const workbook = Xlsx.utils.book_new();
     // 二维数组转换成工作表对象
-    const worksheet = Xlsx.utils.aoa_to_sheet(data);
-    Xlsx.utils.book_append_sheet(workbook, worksheet);
-    Xlsx.write(workbook, filename);
+    // const worksheet = Xlsx.utils.aoa_to_sheet(data);
+    // 对象换成工作表
+    const worksheet = Xlsx.utils.json_to_sheet(data);
+    Xlsx.utils.book_append_sheet(workbook, worksheet, 'sheet1');
+    Xlsx.writeFile(workbook, filename);
 }
 
 export function formatJson(filterVal, jsonData) {

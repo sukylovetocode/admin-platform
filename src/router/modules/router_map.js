@@ -34,7 +34,12 @@ const component_map = {
         import(
             /* webpackChunkName: "features" */ '@/views/features/Excel/index.vue'
         ),
+    Share: () =>
+        import(
+            /* webpackChunkName: "features" */ '@/views/features/Share/index.vue'
+        ),
 };
+
 export default (component) => {
     return component_map[component] || null;
 };
