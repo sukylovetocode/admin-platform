@@ -14,6 +14,8 @@
                 <el-button type="primary" @click="handleOriginCopy"
                     >原生复制</el-button
                 >
+                <el-button v-clipboard data-clipboard-target="#content"
+                    data-clipboard-action="copy">封装自定义指令</el-button>
             </el-col>
         </el-row>
     </div>

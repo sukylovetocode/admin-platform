@@ -1,7 +1,7 @@
 <template>
     <div>
-        <h3>插件：tinymce</h3>
         <div id="editor"></div>
+        <a href="https://www.tiny.cloud/docs/demo/full-featured/">官网</a>
     </div>
 </template>
 
