@@ -25,7 +25,10 @@
             </el-select>
         </el-form-item>
         <el-form-item v-if="needClick">
-            <el-button @click="handleSubmit">检索</el-button>
+            <el-button @click="handleSubmit" type="primary">检索</el-button>
+        </el-form-item>
+        <el-form-item v-if="needReset">
+            <el-button @click="handleReset">复原</el-button>
         </el-form-item>
     </el-form>
 </template>
@@ -35,6 +38,7 @@ export default {
     props: {
         needClick: Boolean,
         searchType: Array,
+        needReset: Boolean,
     },
     data() {
         return {
@@ -56,6 +60,11 @@ export default {
         },
         handleSubmit() {
             this.$emit('SEARCH', this.form);
+        },
+        handleReset() {
+            for (let key in this.form) {
+                this.form[key] = '';
+            }
         },
     },
 };

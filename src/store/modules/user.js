@@ -6,7 +6,9 @@ const state = {
     token: '',
     info: {},
     permission: [],
-    active_app: '/features',
+    active_app: window.location.pathname.split('/')[1]
+        ? '/' + window.location.pathname.split('/')[1]
+        : '/features',
 };
 
 const mutations = {

@@ -29,6 +29,7 @@ import {
     Select,
     Option,
     Tag,
+    Switch,
 } from 'element-ui';
 
 Vue.use(Container);
@@ -58,5 +59,6 @@ Vue.use(Popover);
 Vue.use(Tag);
 Vue.use(Select);
 Vue.use(Option);
+Vue.use(Switch);
 
 Vue.prototype.$message = Message;

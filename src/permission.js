@@ -26,12 +26,22 @@ router.$addRoutes = (params) => {
         routes: defaultRoutes,
     }).matcher;
     router.addRoutes(params);
+    router.addRoutes([
+        {
+            path: '*',
+            name: 'NoFound',
+            component: () =>
+                import(
+                    /* webpackChunkName: "common" */ '@/views/404/index.vue'
+                ),
+        },
+    ]);
 };
 
 // 解决刷新后会404问题
 router.onReady(() => {
     // 假如没有permission就重新获取
-    if (store.getters.hasPermission.length <= 0) {
+    if (store.state.user.permission.length <= 0) {
         initRouter();
     }
 });
@@ -52,7 +62,7 @@ router.beforeEach(async (to, from, next) => {
             Nprogress.done();
         }
     } else {
-        if (store.getters.hasPermission.length <= 0) {
+        if (store.state.user.permission.length <= 0) {
             initRouter();
             next();
         } else {

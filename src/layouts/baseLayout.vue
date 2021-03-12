@@ -1,6 +1,6 @@
 <template>
     <el-container>
-        <el-aside width="250px"><my-menu></my-menu></el-aside>
+        <el-aside width="250px"><side-menu></side-menu></el-aside>
         <el-container>
             <el-header><my-header></my-header></el-header>
             <el-main>
@@ -14,12 +14,12 @@
 <script>
 import MyFooter from '@/components/Footer/index';
 import MyHeader from '@/components/Header/index';
-import MyMenu from '@/components/Menu/index';
+import SideMenu from '@/components/Menu/SideMenu';
 export default {
     components: {
         MyFooter,
         MyHeader,
-        MyMenu,
+        SideMenu,
     },
 };
 </script>

@@ -1,4 +1,5 @@
 import BaseLayout from '@/layouts/baseLayout';
+
 const component_map = {
     Lottie: () =>
         import(
@@ -14,13 +15,17 @@ const component_map = {
         import(
             /* webpackChunkName: "charts" */ '@/views/charts/echarts/barChart/index.vue'
         ),
-    Markdown: () =>
+    Table: () =>
         import(
-            /* webpackChunkName: "features" */ '@/views/features/Markdown/index.vue'
+            /* webpackChunkName: "features" */ '@/views/features/Table/index.vue'
         ),
-    RichText: () =>
+    Editor: () =>
         import(
-            /* webpackChunkName: "features" */ '@/views/features/RichText/index.vue'
+            /* webpackChunkName: "features" */ '@/views/features/Editor/index.vue'
+        ),
+    Calendar: () =>
+        import(
+            /* webpackChunkName: "features" */ '@/views/features/Calendar/index.vue'
         ),
     CopyPaste: () =>
         import(
@@ -38,6 +43,8 @@ const component_map = {
         import(
             /* webpackChunkName: "features" */ '@/views/features/Share/index.vue'
         ),
+    Model: () =>
+        import(/* webpackChunkName: "features" */ '@/views/Model/index.vue'),
 };
 
 export default (component) => {

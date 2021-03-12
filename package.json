@@ -21,6 +21,7 @@
         "lodash": "^4.17.21",
         "lottie-web": "^5.7.6",
         "nprogress": "^0.2.0",
+        "three": "^0.126.1",
         "tinymce": "^5.7.0",
         "vue": "^2.6.11",
         "vue-fragment": "^1.5.2",

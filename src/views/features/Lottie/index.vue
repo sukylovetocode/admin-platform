@@ -32,6 +32,9 @@ export default {
     components: {
         animContainer,
     },
+    destroyed() {
+        this.anim.destroy();
+    },
     mounted() {
         this.anim = lottie.loadAnimation({
             container: document.getElementById('anim1'), // the dom element

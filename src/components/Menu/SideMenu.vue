@@ -4,13 +4,12 @@
         <el-menu
             class="my_menu_left"
             @select="handleSelect"
-            v-if="active_app.children"
+            :default-active="activeIndex"
         >
             <menu-item
-                v-for="(item, index) in active_app.children"
-                :key="index"
+                v-for="item in SideNavs"
+                :key="item.id"
                 :item="item"
-                topMenu="false"
             ></menu-item>
         </el-menu>
     </div>
@@ -18,15 +17,29 @@
 
 <script>
 import MenuItem from './components/menuItem';
-import { mapGetters } from 'vuex';
+
 export default {
+    data() {
+        return {
+            activeIndex: window.location.pathname,
+        };
+    },
     methods: {
         handleSelect(index) {
             this.$router.push(index);
         },
     },
     computed: {
-        ...mapGetters(['active_app']),
+        SideNavs() {
+            var active_app = this.$store.state.user.active_app;
+            let arr;
+            this.$store.state.user.permission.filter((item) => {
+                if (item.path === active_app) {
+                    arr = item.children;
+                }
+            });
+            return arr;
+        },
     },
     components: {
         MenuItem,

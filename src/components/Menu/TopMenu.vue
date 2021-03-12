@@ -6,10 +6,9 @@
             @select="handleSelect"
         >
             <menu-item
-                v-for="(item, index) in top_menu"
+                v-for="(item, index) in TopNavs"
                 :key="index"
                 :item="item"
-                topMenu="true"
             ></menu-item>
         </el-menu>
     </div>
@@ -17,20 +16,27 @@
 
 <script>
 import MenuItem from '../Menu/components/menuItem';
-import { mapGetters } from 'vuex';
+
 export default {
     data() {
         return {
-            activeIndex: '/features',
+            activeIndex: this.$store.state.user.active_app,
         };
     },
     computed: {
-        ...mapGetters(['top_menu']),
+        TopNavs() {
+            return this.$store.state.user.permission.map((item) => {
+                let tmp = { ...item };
+                delete tmp.children;
+                return tmp;
+            });
+        },
     },
     methods: {
         handleSelect(e) {
             this.activeIndex = e;
             this.$store.dispatch('user/active_app', e);
+            this.$router.push(e);
         },
     },
     components: {

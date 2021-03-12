@@ -8,7 +8,7 @@
             :prop="item.name"
             ><template slot-scope="scope">
                 <slot :name="item.name" :scope="scope.row">
-                    <fragment>{{ scope.row[item.name] }}</fragment>
+                    {{ scope.row[item.name] }}
                 </slot>
             </template>
         </el-table-column>
@@ -42,9 +42,6 @@
 </template>
 
 <script>
-import Fragment from 'vue-fragment';
-import Vue from 'vue';
-Vue.use(Fragment);
 export default {
     props: {
         tableData: Array,

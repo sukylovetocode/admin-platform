@@ -1,6 +1,11 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import BaseLayout from '@/layouts/baseLayout';
+
+// 解决ElementUI导航中VUE-ROUTER在3.0版本重复点菜单报错
+const originalPush = VueRouter.prototype.push;
+VueRouter.prototype.push = function push(location) {
+    return originalPush.call(this, location).catch((err) => err);
+};
 
 Vue.use(VueRouter);
 export const defaultRoutes = [
@@ -34,27 +39,8 @@ export const defaultRoutes = [
                         /* webpackChunkName: "default" */ '../views/Register/index.vue'
                     ),
             },
-            {
-                path: '/demo',
-                name: 'ChatingBoard',
-                component: BaseLayout,
-                children: [
-                    {
-                        path: '/demo/chating-board',
-                        name: 'ChatingBoard',
-                        component: () =>
-                            import('@/views/demo/chating-board/index.vue'),
-                    },
-                ],
-            },
         ],
     },
-    // {
-    //     path: '*',
-    //     name: 'NoFound',
-    //     component: () =>
-    //         import(/* webpackChunkName: "common" */ '../views/404/index.vue'),
-    // },
 ];
 
 const router = new VueRouter({

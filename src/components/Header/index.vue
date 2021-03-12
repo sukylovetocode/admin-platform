@@ -18,7 +18,7 @@
     </div>
 </template>
 <script>
-import TopMenu from '@/components/TopMenu/index';
+import TopMenu from '@/components/Menu/TopMenu';
 export default {
     components: {
         TopMenu,
@@ -26,7 +26,7 @@ export default {
 };
 </script>
 
-<style lang="css">
+<style lang="css" scoped>
 .my_header {
     display: flex;
     align-items: center;
