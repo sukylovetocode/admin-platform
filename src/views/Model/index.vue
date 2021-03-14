@@ -8,8 +8,7 @@
 <script>
 //https://github.com/JChehe/blog/issues/44
 //https://github.com/JChehe/blog/issues/14
-
-import ModelViews from '@/components/Model/modelViews.vue';
+import ModelViews from '@/components/Model/modelViews1.vue';
 export default {
     components: {
         ModelViews,

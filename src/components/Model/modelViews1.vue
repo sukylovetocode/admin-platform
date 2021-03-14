@@ -6,19 +6,19 @@
         >
         <!-- These toggle the the different parts of the chair that can be edited, note data-option is the key that links to the name of the part in the 3D file -->
         <div class="options">
-            <div class="option --is-active" data-option="legs">
+            <div class="option --is-active" data-option="back">
                 <img
                     src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/1376484/legs.svg"
                     alt=""
                 />
             </div>
-            <div class="option" data-option="cushions">
+            <div class="option" data-option="sit">
                 <img
                     src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/1376484/cushions.svg"
                     alt=""
                 />
             </div>
-            <div class="option" data-option="base">
+            <div class="option" data-option="bottom">
                 <img
                     src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/1376484/base.svg"
                     alt=""
@@ -80,33 +80,9 @@ export default {
             const colors = [
                 {
                     texture:
-                        'https://s3-us-west-2.amazonaws.com/s.cdpn.io/1376484/wood_.jpg',
-                    size: [2, 2, 2],
-                    shininess: 60,
-                },
-                 {
-                    texture:
                         'http://localhost:8080/fabric_.jpg',
                     size: [4, 4, 4],
                     shininess: 10,
-                },
-                {
-                    texture:
-                        'https://s3-us-west-2.amazonaws.com/s.cdpn.io/1376484/pattern_.jpg',
-                    size: [8, 8, 8],
-                    shininess: 10,
-                },
-                {
-                    texture:
-                        'https://s3-us-west-2.amazonaws.com/s.cdpn.io/1376484/denim_.jpg',
-                    size: [3, 3, 3],
-                    shininess: 0,
-                },
-                {
-                    texture:
-                        'https://s3-us-west-2.amazonaws.com/s.cdpn.io/1376484/quilt_.jpg',
-                    size: [6, 6, 6],
-                    shininess: 0,
                 },
                 {
                     color: '131417',
@@ -296,15 +272,20 @@ export default {
                     txt.repeat.set(color.size[0], color.size[1], color.size[2]);
                     txt.wrapS = THREE.RepeatWrapping;
                     txt.wrapT = THREE.RepeatWrapping;
+                    // txt.encoding = THREE.sRGBEncoding;
+                    // txt.flipY = false;
 
-                    new_mtl = new THREE.MeshBasicMaterial({
+                    console.log(txt)
+                    new_mtl = new THREE.MeshPhongMaterial({
                         map: txt,
                         shininess: color.shininess ? color.shininess : 10,
+                        //flatShading: true //glb的模型要加入这个参数，不然会渲染不出颜色c4d导出问题
                     });
                 } else {
                     new_mtl = new THREE.MeshPhongMaterial({
                         color: parseInt('0x' + color.color),
                         shininess: color.shininess ? color.shininess : 10,
+                        // flatShading: true
                     });
                 }
                 setMaterial(that.theModel, activeOption, new_mtl);
@@ -313,7 +294,7 @@ export default {
 
             // Select Option
             const options = document.querySelectorAll('.option');
-            var activeOption = 'legs';
+            var activeOption = 'sit';
 
             for (const option of options) {
                 option.addEventListener('click', selectOption);
@@ -355,20 +336,19 @@ export default {
 
             const BACKGROUND_COLOR = 0xf1f1f1;
 
-            const MODEL_PATH ='http://localhost:8080/chair002.glb';
-                // 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/1376484/chair.glb';
+            const MODEL_PATH =
+                'http://localhost:8080/chair004.glb'; //切记 要想能够成功覆盖材质，必须在blender中渲染以及实现UV贴图后导出
 
             // Initial material
             const INITIAL_MTL = new THREE.MeshPhongMaterial({
                 color: 0xf1f1f1,
-                shininess: 10,
+                shininess: 20,
+               // flatShading: true
             });
             const INITIAL_MAP = [
+                { childID: 'bottom', mtl: INITIAL_MTL },
                 { childID: 'back', mtl: INITIAL_MTL },
-                { childID: 'base', mtl: INITIAL_MTL },
-                { childID: 'cushions', mtl: INITIAL_MTL },
-                { childID: 'legs', mtl: INITIAL_MTL },
-                { childID: 'supports', mtl: INITIAL_MTL },
+                { childID: 'sit', mtl: INITIAL_MTL },
             ];
 
             // Function - Add the textures to the models
@@ -390,24 +370,26 @@ export default {
                 MODEL_PATH,
                 function(gltf) {
                     that.theModel = gltf.scene;
-                    console.log(that.theModel)
+            
 
                     // Set the models initial scale
-                    that.theModel.scale.set(2, 2, 2);
+                    that.theModel.scale.set(0.1, 0.1, 0.1);
 
                     // 旋转
                     that.theModel.rotation.y = Math.PI;
 
                     // Offset the y position a bit
-                    that.theModel.position.y = -1;
+                    that.theModel.position.y =-1;
 
                     // 接受投影
                     that.theModel.traverse((o) => {
                         if (o.isMesh) {
                             o.castShadow = true;
                             o.receiveShadow = true;
+                          
                         }
                     });
+
 
                     // Set initial textures
                     for (let object of INITIAL_MAP) {
@@ -425,18 +407,18 @@ export default {
 
             this.scene = new THREE.Scene(); // 创建场景
             this.scene.background = new THREE.Color(BACKGROUND_COLOR);
-            this.scene.fog = new THREE.Fog(BACKGROUND_COLOR, 20, 100);
+            this.scene.fog = new THREE.Fog(BACKGROUND_COLOR, 50, 100);
 
             // Add lights
             var hemiLight = new THREE.HemisphereLight(0xffffff, 0xffffff, 0.61);
-            hemiLight.position.set(0, 50, 0);
+            hemiLight.position.set(0,50,0);
             // Add hemisphere light to scene
             this.scene.add(hemiLight);
 
             var dirLight = new THREE.DirectionalLight(0xffffff, 0.54);
-            dirLight.position.set(-8, 12, 8);
+            dirLight.position.set( -8, 12, 8 );
             dirLight.castShadow = true;
-            // dirLight.shadow.mapSize = new THREE.Vector2(1024, 1024);
+            dirLight.shadow.mapSize = new THREE.Vector2(2048, 2048);
             // Add directional Light to scene
             this.scene.add(dirLight);
 
@@ -459,7 +441,9 @@ export default {
             this.renderer.setSize(1000, 800);
             this.renderer.shadowMap.enabled = true;
             this.renderer.setPixelRatio(window.devicePixelRatio);
-         
+               this.renderer.outputEncoding = THREE.sRGBEncoding;
+
+
             container.appendChild(this.renderer.domElement); // 插入渲染器
 
             // Add controls
@@ -486,12 +470,12 @@ export default {
             //     this.camera.updateProjectionMatrix();
             // }
 
-            if (this.theModel != null && this.loaded == false) {
-                this.initialRotation();
-                document
-                    .getElementById('js-drag-notice')
-                    .classList.add('start');
-            }
+            // if (this.theModel != null && this.loaded == false) {
+            //     this.initialRotation();
+            //     document
+            //         .getElementById('js-drag-notice')
+            //         .classList.add('start');
+            // }
         },
     },
     mounted() {
