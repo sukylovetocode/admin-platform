@@ -1,6 +1,7 @@
-import { userLogin, userInfo, userPermission } from '@/api/user'; // eslint-disable-line no-unused-vars
+// import { userLogin, userInfo, userPermission } from '@/api/user'; // eslint-disable-line no-unused-vars
 import { setCookies } from '@/utils/base';
 import { generateRoutes } from '@/utils/permission';
+import permissions from '../permissions'
 
 const state = {
     token: '',
@@ -28,43 +29,57 @@ const mutations = {
 const actions = {
     // eslint-disable-next-line no-unused-vars
     login({ commit }, userInfo) {
+        // eslint-disable-next-line no-unused-vars
         return new Promise((resolve, reject) => {
-            userLogin(userInfo)
-                .then((res) => {
-                    commit('LOGIN', res.data.token);
+            commit('LOGIN', 'token');
+            setCookies('token', 'token');
+            resolve({
+                name: 'admin',
+                avatar: '1.png',
+            })
+            // userLogin(userInfo)
+            //     .then((res) => {
+            //         commit('LOGIN', res.data.token);
 
-                    setCookies('token', res.data.token);
+            //         setCookies('token', res.data.token);
 
-                    resolve(res.data);
-                })
-                .catch((err) => {
-                    reject(err);
-                });
+            //         resolve(res.data);
+            //     })
+            //     .catch((err) => {
+            //         reject(err);
+            //     });
         });
     },
+     // eslint-disable-next-line no-unused-vars
     info({ commit }) {
+         // eslint-disable-next-line no-unused-vars
         return new Promise((resolve, reject) => {
-            userInfo()
-                .then((res) => {
-                    commit('USER_INFO', res.data.info);
-                    resolve();
-                })
-                .catch((err) => {
-                    reject(err);
-                });
+            resolve()
+            // userInfo()
+            //     .then((res) => {
+            //         commit('USER_INFO', res.data.info);
+            //         resolve();
+            //     })
+            //     .catch((err) => {
+            //         reject(err);
+            //     });
         });
     },
     permission({ commit }) {
+        // eslint-disable-next-line no-unused-vars
         return new Promise((resolve, reject) => {
-            userPermission()
-                .then((res) => {
-                    const routes = generateRoutes(res.data.permissions);
+            const routes = generateRoutes(permissions);
                     commit('USER_PERMISSION', routes);
                     resolve(routes);
-                })
-                .catch((err) => {
-                    reject(err);
-                });
+            // userPermission()
+            //     .then((res) => {
+            //         const routes = generateRoutes(res.data.permissions);
+            //         commit('USER_PERMISSION', routes);
+            //         resolve(routes);
+            //     })
+            //     .catch((err) => {
+            //         reject(err);
+            //     });
         });
     },
     active_app({ commit }, app) {

@@ -12,7 +12,7 @@
         <el-button @click="setDirection">调换方向</el-button>
         <el-button @click="destroy">销毁动画</el-button>
         <anim-container
-            :animJson="require('../../../assets/anim/anim1.json')"
+            :animJson="require('@/assets/anim/anim1.json')"
         ></anim-container>
         <a href="http://airbnb.io/lottie/#/web">参考文档</a>
     </div>
@@ -41,7 +41,7 @@ export default {
             renderer: 'svg',
             loop: true,
             autoplay: true,
-            animationData: require('../../../assets/anim/anim1.json'),
+            animationData: require('@/assets/anim/anim1.json'),
         });
         this.anim.addEventListener('data_ready', () => {
             console.log('数据加载完成');

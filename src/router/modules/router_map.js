@@ -3,7 +3,7 @@ import BaseLayout from '@/layouts/baseLayout';
 const component_map = {
     Lottie: () =>
         import(
-            /* webpackChunkName: "features" */ '@/views/features/Lottie/index.vue'
+            /* webpackChunkName: "features" */ '@/views/Visualization/Animation/Lottie/index.vue'
         ),
     UtilsPackage: () =>
         import(
@@ -11,10 +11,6 @@ const component_map = {
         ),
     BaseLayout: BaseLayout,
     defaultLayout: { render: (h) => h('router-view') },
-    Echarts_bar: () =>
-        import(
-            /* webpackChunkName: "charts" */ '@/views/charts/echarts/barChart/index.vue'
-        ),
     Table: () =>
         import(
             /* webpackChunkName: "features" */ '@/views/features/Table/index.vue'
@@ -44,14 +40,10 @@ const component_map = {
             /* webpackChunkName: "features" */ '@/views/features/Share/index.vue'
         ),
     Model: () =>
-        import(/* webpackChunkName: "features" */ '@/views/Model/index.vue'),
+        import(/* webpackChunkName: "features" */ '@/views/Visualization/3D/Model/index.vue'),
     Gantt: () =>
         import(
             /* webpackChunkName: "features" */ '@/views/features/Gantt/index.vue'
-        ),
-    AwesomeAnim: () =>
-        import(
-            /* webpackChunkName: "features" */ '@/views/AwesomeAnim/index.vue'
         ),
     DragEditor: () =>
         import(
