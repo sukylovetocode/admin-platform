@@ -6,7 +6,8 @@
         "serve": "vue-cli-service serve ",
         "dev": "nodemon ./mock/index",
         "build": "vue-cli-service build",
-        "lint": "vue-cli-service lint"
+        "lint": "vue-cli-service lint",
+        "bpage": "node ./auto-build-page/build-page.js"
     },
     "dependencies": {
         "@toast-ui/vue-editor": "^2.5.1",
@@ -21,6 +22,8 @@
         "lodash": "^4.17.21",
         "lottie-web": "^5.7.6",
         "nprogress": "^0.2.0",
+        "psd.js": "^3.3.13",
+        "shelljs": "^0.8.4",
         "three": "^0.126.1",
         "tinymce": "^5.7.0",
         "vue": "^2.6.11",
@@ -28,6 +31,7 @@
         "vue-highlightjs": "^1.3.3",
         "vue-i18n": "^8.23.0",
         "vue-router": "^3.2.0",
+        "vuedraggable": "^2.24.3",
         "vuex": "^3.4.0",
         "xlsx": "^0.16.9"
     },

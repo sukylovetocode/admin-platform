@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
+import addRoute from '../../auto-build-page/addRoute.js';
 
 // 解决ElementUI导航中VUE-ROUTER在3.0版本重复点菜单报错
 const originalPush = VueRouter.prototype.push;
@@ -46,7 +47,7 @@ export const defaultRoutes = [
 const router = new VueRouter({
     mode: 'history',
     base: process.env.BASE_URL,
-    routes: defaultRoutes,
+    routes: defaultRoutes.concat(addRoute),
 });
 
 export default router;

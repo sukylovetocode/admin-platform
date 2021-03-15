@@ -45,6 +45,18 @@ const component_map = {
         ),
     Model: () =>
         import(/* webpackChunkName: "features" */ '@/views/Model/index.vue'),
+    Gantt: () =>
+        import(
+            /* webpackChunkName: "features" */ '@/views/features/Gantt/index.vue'
+        ),
+    AwesomeAnim: () =>
+        import(
+            /* webpackChunkName: "features" */ '@/views/AwesomeAnim/index.vue'
+        ),
+    DragEditor: () =>
+        import(
+            /* webpackChunkName: "features" */ '@/views/demo/DragEditor/index.vue'
+        ),
 };
 
 export default (component) => {

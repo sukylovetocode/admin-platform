@@ -231,6 +231,45 @@ router.get('/api/user/permission', (ctx) => {
                 name: 'Model',
                 component: 'Model',
             },
+            {
+                id: 15,
+                path: '/features/gantt',
+                pid: 3,
+                menu: 1,
+                meta: {
+                    title: '甘力图',
+                    icon: 'el-icon-s-ticket',
+                },
+                topMenu: false,
+                name: 'Gantt',
+                component: 'Gantt',
+            },
+            {
+                id: 16,
+                path: '/features/awesomeanim',
+                pid: 3,
+                menu: 1,
+                meta: {
+                    title: '炫酷特效',
+                    icon: 'el-icon-s-check',
+                },
+                topMenu: false,
+                name: 'AwesomeAnim',
+                component: 'AwesomeAnim',
+            },
+            {
+                id: 17,
+                path: '/demo/drageditor',
+                pid: 9,
+                menu: 1,
+                meta: {
+                    title: '可视化编辑器',
+                    icon: 'el-icon-edit-outline',
+                },
+                topMenu: false,
+                name: 'DragEditor',
+                component: 'DragEditor',
+            },
         ],
     };
 });
