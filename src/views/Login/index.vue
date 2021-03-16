@@ -98,7 +98,7 @@ export default {
                     duration: 1.5,
                     onComplete: function() {
                         that.$router.push(
-                            '/features/lottie' || this.$route.params.redirect
+                            '/features' || this.$route.params.redirect
                         );
                     },
                     ease: 'expo.out',

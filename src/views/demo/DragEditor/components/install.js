@@ -1,6 +1,7 @@
 import Picture from './Picture.vue';
 import Swiper from './Swiper.vue';
-const components = [Picture, Swiper];
+import DText from './Text.vue';
+const components = [Picture, Swiper, DText];
 
 export default function(Vue) {
     components.forEach((component) => {

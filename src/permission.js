@@ -26,6 +26,7 @@ router.$addRoutes = (params) => {
         routes: defaultRoutes,
     }).matcher;
     router.addRoutes(params);
+    // 必须放最后
     router.addRoutes([
         {
             path: '*',
@@ -63,7 +64,7 @@ router.beforeEach(async (to, from, next) => {
         }
     } else {
         if (store.state.user.permission.length <= 0) {
-            initRouter();
+            // initRouter();
             next();
         } else {
             next();

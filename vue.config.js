@@ -6,4 +6,10 @@ module.exports = {
             },
         },
     },
+    chainWebpack: (config) => {
+        config.resolve.alias.set(
+            'ScrollMagic',
+            'scrollmagic/scrollmagic/uncompressed/ScrollMagic.js'
+        );
+    },
 };

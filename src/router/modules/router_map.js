@@ -40,7 +40,9 @@ const component_map = {
             /* webpackChunkName: "features" */ '@/views/features/Share/index.vue'
         ),
     Model: () =>
-        import(/* webpackChunkName: "features" */ '@/views/Visualization/3D/Model/index.vue'),
+        import(
+            /* webpackChunkName: "features" */ '@/views/Visualization/3D/Model/index.vue'
+        ),
     Gantt: () =>
         import(
             /* webpackChunkName: "features" */ '@/views/features/Gantt/index.vue'
@@ -49,6 +51,10 @@ const component_map = {
         import(
             /* webpackChunkName: "features" */ '@/views/demo/DragEditor/index.vue'
         ),
+    ScrollAnim1: () =>
+        import('@/views/Visualization/Animation/ScrollMoveAnim/anim1.vue'),
+    ParallaxAnim1: () =>
+        import('@/views/Visualization/Animation/ParallaxAnim/anim1.vue'),
 };
 
 export default (component) => {

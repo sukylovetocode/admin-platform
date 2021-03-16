@@ -18,7 +18,7 @@ import 'tinymce/plugins/autosave';
 import 'tinymce/plugins/advlist';
 import 'tinymce/plugins/emoticons';
 import 'tinymce/plugins/emoticons/js/emojis';
-import 'tinymce/langs/zh_CN';
+import '!!raw-loader!@/assets/zh_CN.js';
 import 'tinymce/skins/ui/oxide/skin.min.css';
 
 export default {

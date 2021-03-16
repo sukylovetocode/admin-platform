@@ -1,7 +1,7 @@
 // import { userLogin, userInfo, userPermission } from '@/api/user'; // eslint-disable-line no-unused-vars
 import { setCookies } from '@/utils/base';
 import { generateRoutes } from '@/utils/permission';
-import permissions from '../permissions'
+import permissions from '../permissions';
 
 const state = {
     token: '',
@@ -33,10 +33,7 @@ const actions = {
         return new Promise((resolve, reject) => {
             commit('LOGIN', 'token');
             setCookies('token', 'token');
-            resolve({
-                name: 'admin',
-                avatar: '1.png',
-            })
+            resolve({ status: 200 });
             // userLogin(userInfo)
             //     .then((res) => {
             //         commit('LOGIN', res.data.token);
@@ -50,11 +47,11 @@ const actions = {
             //     });
         });
     },
-     // eslint-disable-next-line no-unused-vars
+    // eslint-disable-next-line no-unused-vars
     info({ commit }) {
-         // eslint-disable-next-line no-unused-vars
+        // eslint-disable-next-line no-unused-vars
         return new Promise((resolve, reject) => {
-            resolve()
+            resolve();
             // userInfo()
             //     .then((res) => {
             //         commit('USER_INFO', res.data.info);
@@ -69,8 +66,8 @@ const actions = {
         // eslint-disable-next-line no-unused-vars
         return new Promise((resolve, reject) => {
             const routes = generateRoutes(permissions);
-                    commit('USER_PERMISSION', routes);
-                    resolve(routes);
+            commit('USER_PERMISSION', routes);
+            resolve(routes);
             // userPermission()
             //     .then((res) => {
             //         const routes = generateRoutes(res.data.permissions);
