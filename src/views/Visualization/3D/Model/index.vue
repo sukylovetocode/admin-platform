@@ -1,14 +1,9 @@
 <template>
-    <div :style="{ width: '100%', height: '100%' }">
-        <h3>三维模型渲染</h3>
-        <model-views></model-views>
-    </div>
+    <model-views></model-views>
 </template>
 
 <script>
-//https://github.com/JChehe/blog/issues/44
-//https://github.com/JChehe/blog/issues/14
-import ModelViews from '@/components/Model/modelViews1.vue';
+import ModelViews from '@/components/Model/modelViews.vue';
 export default {
     components: {
         ModelViews,

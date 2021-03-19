@@ -6,6 +6,48 @@
             :needReset="needReset"
             @SEARCH="handleSearch"
         ></normal-search>
+        <h3>基本使用</h3>
+        <normal-table
+            :tableHeader="tableHeader"
+            :tableData="tableValue"
+            :noAction="noAction"
+            :canSelect="canSelect"
+            @EDIT="handleEdit"
+            @DELETE="handleDelete"
+            @PUBLISHED="handlePublished"
+            @MULTI_SELECT="handleMultiSelect"
+        >
+            <template v-slot:status="slotProps">
+                {{ slotProps.scope.status === 0 ? '未发布' : '已发布' }}
+            </template>
+        </normal-table>
+
+        <h3>无操作</h3>
+        <normal-table
+            :tableHeader="tableHeader"
+            :tableData="tableValue"
+            :noAction="true"
+            :canSelect="canSelect"
+            @EDIT="handleEdit"
+            @DELETE="handleDelete"
+            @PUBLISHED="handlePublished"
+            @MULTI_SELECT="handleMultiSelect"
+        >
+            <template v-slot:status="slotProps">
+                {{ slotProps.scope.status === 0 ? '未发布' : '已发布' }}
+            </template>
+            <template v-slot:release_time="slotProps">
+                <el-popover trigger="hover" placement="top">
+                    <p>ID: {{ slotProps.scope.id }}</p>
+                    <div slot="reference" class="name-wrapper">
+                        <el-tag size="medium">{{
+                            slotProps.scope.release_time
+                        }}</el-tag>
+                    </div>
+                </el-popover>
+            </template>
+        </normal-table>
+        <h3>自定义操作按钮</h3>
         <normal-table
             :tableHeader="tableHeader"
             :tableData="tableValue"
@@ -28,6 +70,9 @@
                         }}</el-tag>
                     </div>
                 </el-popover>
+            </template>
+            <template v-slot:action>
+                <el-button>自定义按钮</el-button>
             </template>
         </normal-table>
     </div>

@@ -1,58 +1,72 @@
 <template>
-    <el-row>
-        <el-col :lg="12" :sm="24" class="login_left">
-            <div class="login_content">
-                <h3 class="login_logo">
-                    <i class="el-icon-eleme"></i>{{ $t('login.logo') }}
-                </h3>
-                <h2>{{ $t('login.title') }}</h2>
-                <p>{{ $t('login.sub') }}</p>
-                <el-form ref="loginForm" :model="loginForm" :rules="rules">
-                    <el-form-item prop="user">
-                        <label class="login_label">你的用户名</label>
-                        <el-input
-                            v-model="loginForm.user"
-                            class="login_input"
-                        ></el-input>
-                    </el-form-item>
-                    <el-form-item prop="pwd">
-                        <label class="login_label">你的密码</label>
-                        <el-input
-                            v-model="loginForm.pwd"
-                            class="login_input"
-                            type="password"
-                        ></el-input>
-                    </el-form-item>
-                    <el-button
-                        type="primary"
-                        class="login_submit"
-                        @click="handleLogin"
-                        >登录</el-button
+    <div>
+        <el-row>
+            <el-col :lg="12" :sm="24" class="login_left">
+                <div class="login_content">
+                    <h3 class="login_logo">
+                        <i class="el-icon-eleme"></i>{{ $t('login.logo') }}
+                    </h3>
+                    <h2>{{ $t('login.title') }}</h2>
+                    <p>{{ $t('login.sub') }}</p>
+                    <el-form ref="loginForm" :model="loginForm" :rules="rules">
+                        <el-form-item prop="user">
+                            <label class="login_label">你的用户名</label>
+                            <el-input
+                                v-model="loginForm.user"
+                                class="login_input"
+                            ></el-input>
+                        </el-form-item>
+                        <el-form-item prop="pwd">
+                            <label class="login_label">你的密码</label>
+                            <el-input
+                                v-model="loginForm.pwd"
+                                class="login_input"
+                                type="password"
+                            ></el-input>
+                        </el-form-item>
+                        <el-button
+                            type="primary"
+                            class="login_submit"
+                            @click="handleLogin"
+                            >登录</el-button
+                        >
+                    </el-form>
+                    <p>
+                        没有账号<el-button
+                            type="text"
+                            class="login_register"
+                            @click="handleRegister"
+                            >注册</el-button
+                        >
+                    </p>
+                    <el-button type="text" @click="dialogVisible = true"
+                        >第三方登录</el-button
                     >
-                </el-form>
-                <p>
-                    没有账号<el-button
-                        type="text"
-                        class="login_register"
-                        @click="handleRegister"
-                        >注册</el-button
-                    >
-                </p>
-                <el-button type="text">第三方登录</el-button>
+                </div>
+            </el-col>
+            <el-col :lg="12" :sm="24" class="login_right"
+                ><div class="login_bg">
+                    <img
+                        class="login_pic"
+                        src="@/assets/login-right.png"
+                        alt=""
+                    /></div
+            ></el-col>
+        </el-row>
+        <el-dialog title="第三方登录" :visible.sync="dialogVisible" width="30%">
+            <div class="github-wrapper" @click="handleGithubLogin">
+                <i
+                    class="el-icon-user-solid
+"
+                ></i
+                >Github登录
             </div>
-        </el-col>
-        <el-col :lg="12" :sm="24" class="login_right"
-            ><div class="login_bg">
-                <img
-                    class="login_pic"
-                    src="@/assets/login-right.png"
-                    alt=""
-                /></div
-        ></el-col>
-    </el-row>
+        </el-dialog>
+    </div>
 </template>
 
 <script>
+const CLIENT_ID = '24a4eb712fbdab80b302';
 import { gsap } from 'gsap';
 import { CSSPlugin } from 'gsap/CSSPlugin';
 gsap.registerPlugin(CSSPlugin);
@@ -64,6 +78,7 @@ export default {
             pwd: [{ required: true, message: '密码不能为空' }],
         };
         return {
+            dialogVisible: false,
             loginForm: {
                 pwd: '',
                 user: '',
@@ -98,7 +113,7 @@ export default {
                     duration: 1.5,
                     onComplete: function() {
                         that.$router.push(
-                            '/features' || this.$route.params.redirect
+                            '/features/excel' || this.$route.params.redirect
                         );
                     },
                     ease: 'expo.out',
@@ -124,6 +139,9 @@ export default {
         },
         handleRegister() {
             this.$router.push('/register');
+        },
+        handleGithubLogin() {
+            window.location.href = `/authorize?client_id=${CLIENT_ID}&redirect_uri=http://localhost:8080/oauth/redirect`;
         },
     },
 };
@@ -188,5 +206,11 @@ export default {
     .login_content {
         width: 80%;
     }
+}
+.github-wrapper {
+    background: rgb(22, 21, 21);
+    color: #fff;
+    text-align: center;
+    cursor: pointer;
 }
 </style>

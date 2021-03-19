@@ -43,11 +43,12 @@ router.$addRoutes = (params) => {
 router.onReady(() => {
     // 假如没有permission就重新获取
     if (store.state.user.permission.length <= 0) {
+        console.log('第一次');
         initRouter();
     }
 });
 
-const whiteList = ['/login', '/register'];
+const whiteList = ['/login', '/register', '/oauth/redirect'];
 
 router.beforeEach(async (to, from, next) => {
     Nprogress.start();
@@ -64,12 +65,20 @@ router.beforeEach(async (to, from, next) => {
         }
     } else {
         if (store.state.user.permission.length <= 0) {
-            // initRouter();
+            console.log('第2次');
+            // 检测是否刷新进入的页面
+            if (window.performance.navigation.type !== 1) {
+                initRouter();
+            }
             next();
         } else {
             next();
         }
     }
+});
+
+router.onError((error) => {
+    console.log(error);
 });
 
 router.afterEach(() => {

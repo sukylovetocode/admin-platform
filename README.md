@@ -4,15 +4,13 @@
 
 [x] 权限管理
 [x] 动态渲染菜单
-[ ] 全局颜色更换
+[x] 全局颜色更换
 [x] 支持国际化
 [x] 富文本编辑/MD 写法切换
 [ ] 渲染表格以及能够导入及导出 Excel 表格
-[ ] 第三方登录
-[ ] 分步表单提交
+[x] 第三方登录
 [X] 复制粘贴功能
-[ ] 全屏展示
-[ ] 能够调用电脑摄像头进行人脸注册及识别
+[X] 全屏展示
 [x] 支持动画导入
 [x] 进行 Axios 封装
 [x] 按需引入 Element-ui
@@ -21,10 +19,66 @@
 [ ] 可视化编辑器
 [ ] 钉钉审批功能
 [ ] 组合图表展示
-[ ] 三维物体更换颜色
+[x] 三维物体更换颜色
 [ ] 滚动动画
 [ ] 视差动画
 [ ] 视频聊天 demo
+[x] 表格封装
+[ ] 支持 scss
+
+### 支持 scss
+
+最近在项目中需要用到 sass，安装 sass-loader 后发生错误：
+
+`ERROR Error: Rule can only have one resource source (provided resource and test + include + exclude) in {`
+
+可能的原因就是默认的 sass 或者 webpack 版本太高了，从而导致不兼容，把之前的高版本卸载，安装低版本就行
+
+安装低版本的 sass-loader 命令：`npm install sass-loader@7.3.1 --save-dev`
+
+还不行的话：
+
+卸载当前版本 webpack 命令：`npm uninstall webpack`
+
+安装低版本的 webpack 命令：`npm install webpack@^4.0.0 --save-dev`
+
+### 三维物体更换颜色
+
+值得注意如果需要我们自己来换布料，则需要我们把模型在`blender`中进行导出，且要适应材质的话，需要模型拥有`UV贴图`，导出格式为`glb`
+
+### 表格封装(应该封装成插件)
+
+-   传入值
+
+```javascript
+tableHeader: [
+    {
+        name: 'id',
+        label: 'ID',
+    },
+];
+```
+
+-   传入的数据数组中对象需要`key`与`tableHeader`中的`name`一致
+
+```javascript
+tableData: [
+    {
+        id: 1,
+    },
+];
+```
+
+#### 支持功能
+
+-   可以直接传入数据后进行静态数据的渲染
+-   可以根据需要通过插槽改写每一个插槽的内容
+-   初始化给予了三个操作按钮，分别是 编辑 删除以及发布，同样可以根据需要直接删除
+-   可以选择是否需要单选框
+-   本身带有事件接口是`handleEdit` `handleDelete` `handlePublished` `handleMultiSelect` 可根据需要进行取值
+
+`Loading chunk {n} failed`
+我们引入的组件有路径不对的,要一个个路径重新检查
 
 ### 可视化编辑器
 

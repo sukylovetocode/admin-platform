@@ -1,350 +1,188 @@
 <template>
     <div>
-        <!-- Just a quick notice to the user that it can be interacted with -->
-        <span class="drag-notice" id="js-drag-notice"
-            >Drag to rotate 360&#176;</span
-        >
         <!-- These toggle the the different parts of the chair that can be edited, note data-option is the key that links to the name of the part in the 3D file -->
         <div class="options">
-            <div class="option --is-active" data-option="legs">
+            <div
+                :class="[
+                    'option',
+                    activeOption === 'back' ? '--is-active' : '',
+                ]"
+                data-option="back"
+                @click="selectOption"
+            >
                 <img
                     src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/1376484/legs.svg"
                     alt=""
                 />
             </div>
-            <div class="option" data-option="cushions">
+            <div
+                :class="['option', activeOption === 'sit' ? '--is-active' : '']"
+                data-option="sit"
+                @click="selectOption"
+            >
                 <img
                     src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/1376484/cushions.svg"
                     alt=""
                 />
             </div>
-            <div class="option" data-option="base">
+            <div
+                :class="[
+                    'option',
+                    activeOption === 'bottom' ? '--is-active' : '',
+                ]"
+                data-option="bottom"
+                @click="selectOption"
+            >
                 <img
                     src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/1376484/base.svg"
                     alt=""
                 />
             </div>
-            <div class="option" data-option="supports">
-                <img
-                    src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/1376484/supports.svg"
-                    alt=""
-                />
-            </div>
-            <div class="option" data-option="back">
-                <img
-                    src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/1376484/back.svg"
-                    alt=""
-                />
-            </div>
         </div>
-        <div id="container">
-            <div class="controls">
-                <!-- This tray will be filled with colors via JS, and the ability to slide this panel will be added in with a lightweight slider script (no dependency used for this) -->
-                <div id="js-tray" class="tray">
-                    <div id="js-tray-slide" class="tray__slide"></div>
+        <div class="controls">
+            <!-- This tray will be filled with colors via JS, and the ability to slide this panel will be added in with a lightweight slider script (no dependency used for this) -->
+            <div id="js-tray" class="tray">
+                <div id="js-tray-slide" class="tray__slide">
+                    <div
+                        class="tray__swatch"
+                        v-for="(color, index) in COLORS"
+                        :key="index"
+                        :style="{
+                            background: color.texture
+                                ? 'url(' + color.texture + ')'
+                                : '#' + color.color,
+                        }"
+                        @click="selectColor(color)"
+                    ></div>
                 </div>
             </div>
         </div>
+        <div id="container"></div>
     </div>
 </template>
 
 <script>
+// 依据：https://github.com/JChehe/blog/issues/44
 import * as THREE from 'three';
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'; // 需要自己引入
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'; // 需要自己引入,官方提倡使用
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+
+import {
+    COLORS,
+    INITIAL_MAP,
+    BACKGROUND_COLOR,
+    MODEL_PATH,
+} from './settings.js';
+
 export default {
     data() {
+        this.COLORS = COLORS;
         return {
-            camera: null,
-            scene: null,
             renderer: null,
-            mesh: null,
-            theModel: null,
-            loaded: false,
+            model: null,
             initRotate: 0,
+            activeOption: 'back',
         };
     },
     methods: {
-        initialRotation() {
-            this.initRotate++;
-            if (this.initRotate <= 120) {
-                this.theModel.rotation.y += Math.PI / 60;
-            } else {
-                this.loaded = true;
-            }
+        selectOption(e) {
+            this.activeOption = e.currentTarget.dataset.option;
         },
-        init() {
-            var that = this;
+        selectColor(color) {
+            let new_mtl;
 
-            // 颜色数组
-            const colors = [
-                {
-                    texture:
-                        'https://s3-us-west-2.amazonaws.com/s.cdpn.io/1376484/wood_.jpg',
-                    size: [2, 2, 2],
-                    shininess: 60,
-                },
-                 {
-                    texture:
-                        'http://localhost:8080/fabric_.jpg',
-                    size: [4, 4, 4],
-                    shininess: 10,
-                },
-                {
-                    texture:
-                        'https://s3-us-west-2.amazonaws.com/s.cdpn.io/1376484/pattern_.jpg',
-                    size: [8, 8, 8],
-                    shininess: 10,
-                },
-                {
-                    texture:
-                        'https://s3-us-west-2.amazonaws.com/s.cdpn.io/1376484/denim_.jpg',
-                    size: [3, 3, 3],
-                    shininess: 0,
-                },
-                {
-                    texture:
-                        'https://s3-us-west-2.amazonaws.com/s.cdpn.io/1376484/quilt_.jpg',
-                    size: [6, 6, 6],
-                    shininess: 0,
-                },
-                {
-                    color: '131417',
-                },
-                {
-                    color: '374047',
-                },
-                {
-                    color: '5f6e78',
-                },
-                {
-                    color: '7f8a93',
-                },
-                {
-                    color: '97a1a7',
-                },
-                {
-                    color: 'acb4b9',
-                },
-                {
-                    color: 'DF9998',
-                },
-                {
-                    color: '7C6862',
-                },
-                {
-                    color: 'A3AB84',
-                },
-                {
-                    color: 'D6CCB1',
-                },
-                {
-                    color: 'F8D5C4',
-                },
-                {
-                    color: 'A3AE99',
-                },
-                {
-                    color: 'EFF2F2',
-                },
-                {
-                    color: 'B0C5C1',
-                },
-                {
-                    color: '8B8C8C',
-                },
-                {
-                    color: '565F59',
-                },
-                {
-                    color: 'CB304A',
-                },
-                {
-                    color: 'FED7C8',
-                },
-                {
-                    color: 'C7BDBD',
-                },
-                {
-                    color: '3DCBBE',
-                },
-                {
-                    color: '264B4F',
-                },
-                {
-                    color: '389389',
-                },
-                {
-                    color: '85BEAE',
-                },
-                {
-                    color: 'F2DABA',
-                },
-                {
-                    color: 'F2A97F',
-                },
-                {
-                    color: 'D85F52',
-                },
-                {
-                    color: 'D92E37',
-                },
-                {
-                    color: 'FC9736',
-                },
-                {
-                    color: 'F7BD69',
-                },
-                {
-                    color: 'A4D09C',
-                },
-                {
-                    color: '4C8A67',
-                },
-                {
-                    color: '25608A',
-                },
-                {
-                    color: '75C8C6',
-                },
-                {
-                    color: 'F5E4B7',
-                },
-                {
-                    color: 'E69041',
-                },
-                {
-                    color: 'E56013',
-                },
-                {
-                    color: '11101D',
-                },
-                {
-                    color: '630609',
-                },
-                {
-                    color: 'C9240E',
-                },
-                {
-                    color: 'EC4B17',
-                },
-                {
-                    color: '281A1C',
-                },
-                {
-                    color: '4F556F',
-                },
-                {
-                    color: '64739B',
-                },
-                {
-                    color: 'CDBAC7',
-                },
-                {
-                    color: '946F43',
-                },
-                {
-                    color: '66533C',
-                },
-                {
-                    color: '173A2F',
-                },
-                {
-                    color: '153944',
-                },
-                {
-                    color: '27548D',
-                },
-                {
-                    color: '438AAC',
-                },
-            ];
-            const TRAY = document.getElementById('js-tray-slide');
-            // Function - Build Colors
-            function buildColors(colors) {
-                for (let [i, color] of colors.entries()) {
-                    let swatch = document.createElement('div');
-                    swatch.classList.add('tray__swatch');
+            if (color.texture) {
+                let txt = new THREE.TextureLoader().load(color.texture);
 
-                    if (color.texture) {
-                        swatch.style.backgroundImage =
-                            'url(' + color.texture + ')';
-                    } else {
-                        swatch.style.background = '#' + color.color;
-                    }
+                txt.repeat.set(color.size[0], color.size[1], color.size[2]);
+                txt.wrapS = THREE.RepeatWrapping;
+                txt.wrapT = THREE.RepeatWrapping;
+                txt.encoding = THREE.sRGBEncoding;
+                txt.flipY = false;
 
-                    swatch.setAttribute('data-key', i);
-                    TRAY.append(swatch);
-                }
-            }
-            buildColors(colors);
-
-            // Swatches
-            const swatches = document.querySelectorAll('.tray__swatch');
-
-            for (const swatch of swatches) {
-                swatch.addEventListener('click', selectSwatch);
-            }
-
-            function selectSwatch(e) {
-                let color = colors[parseInt(e.target.dataset.key)];
-                let new_mtl;
-
-                if (color.texture) {
-                    let txt = new THREE.TextureLoader().load(color.texture);
-
-                    txt.repeat.set(color.size[0], color.size[1], color.size[2]);
-                    txt.wrapS = THREE.RepeatWrapping;
-                    txt.wrapT = THREE.RepeatWrapping;
-
-                    new_mtl = new THREE.MeshBasicMaterial({
-                        map: txt,
-                        shininess: color.shininess ? color.shininess : 10,
-                    });
-                } else {
-                    new_mtl = new THREE.MeshPhongMaterial({
-                        color: parseInt('0x' + color.color),
-                        shininess: color.shininess ? color.shininess : 10,
-                    });
-                }
-                setMaterial(that.theModel, activeOption, new_mtl);
-                console.log(that.theModel)
-            }
-
-            // Select Option
-            const options = document.querySelectorAll('.option');
-            var activeOption = 'legs';
-
-            for (const option of options) {
-                option.addEventListener('click', selectOption);
-            }
-
-            function selectOption(e) {
-                let option = e.target.parentNode;
-                activeOption = option.dataset.option;
-
-                for (const otherOption of options) {
-                    otherOption.classList.remove('--is-active');
-                }
-                option.classList.add('--is-active');
-            }
-
-            function setMaterial(parent, type, mtl) {
-                parent.traverse((o) => {
-                    if (o.isMesh && o.nameID != null) {
-                        if (o.nameID == type) {
-                            o.material = mtl;
-                        }
-                    }
+                new_mtl = new THREE.MeshPhongMaterial({
+                    map: txt,
+                    shininess: color.shininess ? color.shininess : 10,
+                    //flatShading: true //glb的模型要加入这个参数，不然会渲染不出颜色c4d导出问题
+                });
+            } else {
+                new_mtl = new THREE.MeshPhongMaterial({
+                    color: parseInt('0x' + color.color),
+                    shininess: color.shininess ? color.shininess : 10,
                 });
             }
+            this.setMaterial(this.model, this.activeOption, new_mtl);
+        },
+        setMaterial(parent, type, mtl) {
+            parent.traverse((o) => {
+                if (o.isMesh && o.nameID != null) {
+                    if (o.nameID == type) {
+                        o.material = mtl;
+                    }
+                }
+            });
+        },
+        // Function - Add the textures to the models
+        initColor(parent, type, mtl) {
+            // 遍历
+            parent.traverse((o) => {
+                if (o.isMesh) {
+                    if (o.name.includes(type)) {
+                        o.material = mtl;
+                        o.nameID = type; // Set a new property to identify this object
+                    }
+                }
+            });
+        },
+        loadModel() {
+            var that = this;
+            // Init the object loader
+            var loader = new GLTFLoader();
 
+            loader.load(
+                MODEL_PATH,
+                function(gltf) {
+                    that.model = gltf.scene;
+
+                    // Set the models initial scale
+                    that.model.scale.set(0.1, 0.1, 0.1);
+
+                    // 旋转
+                    that.model.rotation.y = Math.PI;
+
+                    // Offset the y position a bit
+                    that.model.position.y = -1;
+
+                    // 设置接受投影
+                    that.model.traverse((o) => {
+                        if (o.isMesh) {
+                            o.castShadow = true;
+                            o.receiveShadow = true;
+                        }
+                    });
+
+                    // 初始化材质
+                    for (let object of INITIAL_MAP) {
+                        that.initColor(that.model, object.childID, object.mtl);
+                    }
+
+                    // Add the model to the scene
+                    that.scene.add(that.model);
+                },
+                undefined,
+                function(error) {
+                    console.error(error);
+                }
+            );
+        },
+        initScene() {
             // webgl构图
-            var container = document.getElementById('container'); // 获得容器
+            this.container = document.getElementById('container'); // 获得容器
 
+            /** 设置照相机 */
             let cameraFar = 5; // 设置一定距离保证其能够看到椅子
 
-            this.camera = new THREE.PerspectiveCamera(
+            this.camera = new THREE.PerspectiveCamera( // 正交照相机
                 50,
                 1920 / 1080,
                 0.1,
@@ -353,79 +191,10 @@ export default {
             this.camera.position.z = cameraFar;
             this.camera.position.x = 0;
 
-            const BACKGROUND_COLOR = 0xf1f1f1;
-
-            const MODEL_PATH ='http://localhost:8080/chair002.glb';
-                // 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/1376484/chair.glb';
-
-            // Initial material
-            const INITIAL_MTL = new THREE.MeshPhongMaterial({
-                color: 0xf1f1f1,
-                shininess: 10,
-            });
-            const INITIAL_MAP = [
-                { childID: 'back', mtl: INITIAL_MTL },
-                { childID: 'base', mtl: INITIAL_MTL },
-                { childID: 'cushions', mtl: INITIAL_MTL },
-                { childID: 'legs', mtl: INITIAL_MTL },
-                { childID: 'supports', mtl: INITIAL_MTL },
-            ];
-
-            // Function - Add the textures to the models
-            function initColor(parent, type, mtl) {
-                parent.traverse((o) => {
-                    if (o.isMesh) {
-                        if (o.name.includes(type)) {
-                            o.material = mtl;
-                            o.nameID = type; // Set a new property to identify this object
-                        }
-                    }
-                });
-            }
-
-            // Init the object loader
-            var loader = new GLTFLoader();
-
-            loader.load(
-                MODEL_PATH,
-                function(gltf) {
-                    that.theModel = gltf.scene;
-                    console.log(that.theModel)
-
-                    // Set the models initial scale
-                    that.theModel.scale.set(2, 2, 2);
-
-                    // 旋转
-                    that.theModel.rotation.y = Math.PI;
-
-                    // Offset the y position a bit
-                    that.theModel.position.y = -1;
-
-                    // 接受投影
-                    that.theModel.traverse((o) => {
-                        if (o.isMesh) {
-                            o.castShadow = true;
-                            o.receiveShadow = true;
-                        }
-                    });
-
-                    // Set initial textures
-                    for (let object of INITIAL_MAP) {
-                        initColor(that.theModel, object.childID, object.mtl);
-                    }
-
-                    // Add the model to the scene
-                    that.scene.add(that.theModel);
-                },
-                undefined,
-                function(error) {
-                    console.error(error);
-                }
-            );
-
-            this.scene = new THREE.Scene(); // 创建场景
+            // 创建场景
+            this.scene = new THREE.Scene();
             this.scene.background = new THREE.Color(BACKGROUND_COLOR);
-            this.scene.fog = new THREE.Fog(BACKGROUND_COLOR, 20, 100);
+            this.scene.fog = new THREE.Fog(BACKGROUND_COLOR, 50, 100);
 
             // Add lights
             var hemiLight = new THREE.HemisphereLight(0xffffff, 0xffffff, 0.61);
@@ -436,7 +205,7 @@ export default {
             var dirLight = new THREE.DirectionalLight(0xffffff, 0.54);
             dirLight.position.set(-8, 12, 8);
             dirLight.castShadow = true;
-            // dirLight.shadow.mapSize = new THREE.Vector2(1024, 1024);
+            dirLight.shadow.mapSize = new THREE.Vector2(2048, 2048);
             // Add directional Light to scene
             this.scene.add(dirLight);
 
@@ -453,16 +222,19 @@ export default {
             floor.position.y = -1;
             this.scene.add(floor);
 
+            this.loadModel();
+
             this.renderer = new THREE.WebGLRenderer({
                 antialias: true,
             }); // 创建渲染器，第一个场景，第二个渲染器
             this.renderer.setSize(1000, 800);
             this.renderer.shadowMap.enabled = true;
             this.renderer.setPixelRatio(window.devicePixelRatio);
-         
-            container.appendChild(this.renderer.domElement); // 插入渲染器
+            this.renderer.outputEncoding = THREE.sRGBEncoding;
 
-            // Add controls
+            this.container.appendChild(this.renderer.domElement); // 插入渲染器
+
+            // 增加旋转滚动控制
             this.controls = new OrbitControls(
                 this.camera,
                 this.renderer.domElement
@@ -472,36 +244,24 @@ export default {
             this.controls.enableDamping = true;
             this.controls.enablePan = false;
             this.controls.dampingFactor = 0.1;
-            this.controls.autoRotate = false; // Toggle this if you'd like the chair to automatically rotate
-            this.controls.autoRotateSpeed = 0.2; // 30
+            this.controls.autoRotate = true; // 设置true可让椅子自动旋转
+            this.controls.autoRotateSpeed = 1; // 30
         },
         animate: function() {
             // 渲染更新
             this.controls.update();
             this.renderer.render(this.scene, this.camera);
             requestAnimationFrame(this.animate);
-            // if (resizeRendererToDisplaySize(this.renderer)) {
-            //     const canvas = this.renderer.domElement;
-            //     this.camera.aspect = canvas.clientWidth / canvas.clientHeight;
-            //     this.camera.updateProjectionMatrix();
-            // }
-
-            if (this.theModel != null && this.loaded == false) {
-                this.initialRotation();
-                document
-                    .getElementById('js-drag-notice')
-                    .classList.add('start');
-            }
         },
     },
     mounted() {
-        this.init();
+        this.initScene();
         this.animate();
     },
 };
 </script>
 
-<style lang="css">
+<style lang="scss">
 #js-tray-slide {
     display: flex;
 }
@@ -511,8 +271,18 @@ export default {
 }
 .options {
     display: flex;
+    font-size: 0;
 }
 .option {
     width: 50px;
+    margin: 10px;
+    box-sizing: border-box;
+    border: 2px solid transparent;
+    img {
+        width: calc(100% - 4px);
+    }
+}
+.--is-active {
+    border: 2px solid red;
 }
 </style>

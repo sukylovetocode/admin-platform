@@ -34,6 +34,7 @@ const actions = {
             commit('LOGIN', 'token');
             setCookies('token', 'token');
             resolve({ status: 200 });
+
             // userLogin(userInfo)
             //     .then((res) => {
             //         commit('LOGIN', res.data.token);
@@ -67,7 +68,10 @@ const actions = {
         return new Promise((resolve, reject) => {
             const routes = generateRoutes(permissions);
             commit('USER_PERMISSION', routes);
-            resolve(routes);
+            setTimeout(() => {
+                resolve(routes);
+            }, 20);
+
             // userPermission()
             //     .then((res) => {
             //         const routes = generateRoutes(res.data.permissions);

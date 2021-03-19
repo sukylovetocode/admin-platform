@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import addRoute from '../../auto-build-page/addRoute.js';
+// import addRoute from '../../auto-build-page/addRoute.js';
 
 // 解决ElementUI导航中VUE-ROUTER在3.0版本重复点菜单报错
 const originalPush = VueRouter.prototype.push;
@@ -30,6 +30,11 @@ export const defaultRoutes = [
                     ),
             },
             {
+                path: '/oauth/redirect',
+                name: 'redirect',
+                component: () => import('@/views/Login/auth-redirect.vue'),
+            },
+            {
                 path: '/register',
                 name: 'Register',
                 meta: {
@@ -47,7 +52,7 @@ export const defaultRoutes = [
 const router = new VueRouter({
     mode: 'history',
     base: process.env.BASE_URL,
-    routes: defaultRoutes.concat(addRoute),
+    routes: defaultRoutes,
 });
 
 export default router;

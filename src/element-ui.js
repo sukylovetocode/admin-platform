@@ -30,6 +30,9 @@ import {
     Option,
     Tag,
     Switch,
+    Dialog,
+    Drawer,
+    Radio,
 } from 'element-ui';
 
 Vue.use(Container);
@@ -60,5 +63,8 @@ Vue.use(Tag);
 Vue.use(Select);
 Vue.use(Option);
 Vue.use(Switch);
+Vue.use(Dialog);
+Vue.use(Drawer);
+Vue.use(Radio);
 
 Vue.prototype.$message = Message;

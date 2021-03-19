@@ -14,6 +14,10 @@
                 </el-dropdown-menu>
             </el-dropdown>
             <div class="header_search"><el-input></el-input></div>
+            <i
+                class="el-icon-full-screen full-btn"
+                @click="handleFullScreen"
+            ></i>
         </div>
     </div>
 </template>
@@ -22,6 +26,21 @@ import TopMenu from '@/components/Menu/TopMenu';
 export default {
     components: {
         TopMenu,
+    },
+    methods: {
+        handleFullScreen() {
+            let element = document.documentElement;
+            if (element.requestFullscreen) {
+                element.requestFullscreen();
+            } else if (element.webkitRequestFullScreen) {
+                element.webkitRequestFullScreen();
+            } else if (element.mozRequestFullScreen) {
+                element.mozRequestFullScreen();
+            } else if (element.msRequestFullscreen) {
+                // IE11
+                element.msRequestFullscreen();
+            }
+        },
     },
 };
 </script>
@@ -47,5 +66,10 @@ export default {
 .header_settings {
     float: right;
     padding: 10px;
+}
+.full-btn {
+    float: right;
+    padding: 15px;
+    font-size: 30px;
 }
 </style>

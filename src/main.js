@@ -5,8 +5,10 @@ import store from './store';
 import VueI18n from 'vue-i18n';
 import './element-ui';
 import './permission';
+import fullScreen from 'vue-fullscreen';
 
 Vue.use(VueI18n);
+Vue.use(fullScreen);
 
 const i18n = new VueI18n({
     locale: 'CN',
