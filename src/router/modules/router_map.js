@@ -23,6 +23,10 @@ const component_map = {
         import(
             /* webpackChunkName: "visualization" */ '@/views/Visualization/3D/Model/index.vue'
         ),
+    Stock: () =>
+        import(
+            /* webpackChunkName: "visualization" */ '@/views/Visualization/Charts/echarts/stock.vue'
+        ),
 };
 
 export default (component) => {

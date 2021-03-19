@@ -129,4 +129,16 @@ export default [
         name: 'ChangeTexture',
         component: 'ChangeTexture',
     },
+    {
+        id: 12,
+        path: '/visualization/echarts/stock',
+        pid: 7,
+        menu: 1,
+        topMenu: false,
+        meta: {
+            title: '指数',
+        },
+        name: 'Stock',
+        component: 'Stock',
+    },
 ];

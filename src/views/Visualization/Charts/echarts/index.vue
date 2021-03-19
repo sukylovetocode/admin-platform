@@ -4,6 +4,7 @@
         <card title="折线图"><my-line></my-line></card>
         <card title="饼图"><pie></pie></card>
         <card title="雷达图"><radar></radar></card>
+        <card title="漏斗图"><funnel></funnel></card>
     </div>
 </template>
 
@@ -13,6 +14,7 @@ import Bar from './components/bar';
 import MyLine from './components/line';
 import Pie from './components/pie';
 import Radar from './components/radar';
+import Funnel from './components/funnel';
 export default {
     components: {
         Card,
@@ -20,6 +22,7 @@ export default {
         MyLine,
         Pie,
         Radar,
+        Funnel,
     },
 };
 </script>
