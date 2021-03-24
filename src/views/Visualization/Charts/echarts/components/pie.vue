@@ -1,15 +1,20 @@
 <template>
-    <div ref="pie" :style="{ width: '450px', height: '300px' }"></div>
+    <v-chart
+        ref="pie"
+        :option="options"
+        :style="{ width: '450px', height: '300px' }"
+    ></v-chart>
 </template>
 
 <script>
-import * as Echarts from 'echarts';
 export default {
+    data() {
+        return {
+            options: {},
+        };
+    },
     mounted() {
-        // 基于准备好的dom，初始化echarts实例
-        let myChart = Echarts.init(this.$refs.pie);
-        // // 绘制图表
-        myChart.setOption({
+        this.options = {
             tooltip: {
                 trigger: 'item',
             },
@@ -51,7 +56,7 @@ export default {
                     ],
                 },
             ],
-        });
+        };
     },
 };
 </script>

@@ -1,4 +1,4 @@
-//https://cloud.tencent.com/developer/article/1612635
+//NOTE 参考 https://cloud.tencent.com/developer/article/1612635
 var addConfig = require('./addConfig');
 var fs = require('fs');
 var path = require('path');
@@ -6,6 +6,7 @@ var shell = require('shelljs');
 
 shell.echo('>>>>>>');
 shell.echo('开始新建页面');
+
 addConfig.forEach((ele) => {
     if (ele.open) {
         buildPage(ele);
@@ -13,51 +14,42 @@ addConfig.forEach((ele) => {
 });
 
 function handleStr(str, config) {
-    if (config.helloworld) {
-        return str;
-    }
-    str = str.replace('%title%', config.desc);
-    str = str.replace('%method%', config.getlist.method);
-    str = str.replace('%geturl%', config.getlist.url);
+    // str = str.replace('%title%', config.desc);
+    // str = str.replace('%method%', config.getlist.method);
+    // str = str.replace('%geturl%', config.getlist.url);
     return str;
 }
 
 function buildPage(config) {
     var paths = path.resolve(`./src/views/${config.name}`);
+    var str = '';
     shell.echo('页面地址:' + paths);
     if (fs.existsSync(paths)) {
         shell.echo('目录已存在');
-        return;
-    }
-    // 同步生成文件夹
-    fs.mkdirSync(paths);
-    shell.echo('目录生成');
-    var str = '';
-    if (config.helloworld) {
-        fs.readFile(
-            path.resolve('./auto-build-page/template-helloworld.vue'),
-            'utf-8',
-            (err, data) => {
-                if (err) {
-                    throw err;
-                }
-                // 新建空白页，读取空白页模版
-                str = handleStr(data, config);
-                // 写入文件
-                shell.echo('复制文件……');
-                fs.writeFileSync(paths + '/index.vue', str, 'utf-8', (err) => {
-                    throw err;
-                });
-                shell.echo('开始新增路由……');
-                addRou(`@/views/${config.name}/index.vue`, config);
-            }
-        );
     } else {
-        str = handleStr(
-            fs.readFile(path.resolve('./template-table.vue')),
-            config
-        );
+        // 同步生成文件夹
+        fs.mkdirSync(paths);
+        shell.echo('目录生成');
     }
+
+    fs.readFile(
+        path.resolve('./auto-build-page/template-page.vue'),
+        'utf-8',
+        (err, data) => {
+            if (err) {
+                throw err;
+            }
+            // 新建空白页，读取空白页模版
+            str = handleStr(data, config);
+            // 写入文件
+            shell.echo('复制文件……');
+            fs.writeFileSync(paths + '/index.vue', str, 'utf-8', (err) => {
+                throw err;
+            });
+            shell.echo('开始新增路由……');
+            addRou(`@/views/${config.name}/index.vue`, config);
+        }
+    );
 }
 
 function addRou(paths, config) {
@@ -86,7 +78,7 @@ function handleRouStr(str, config, paths) {
 function addToConf(str) {
     str += '// add-flag'; // 添加的位置标记
     fs.readFile(
-        path.resolve('./auto-build-page/addRoute.js'),
+        path.resolve('./src/router/addRoute.js'),
         'utf-8',
         (err, data) => {
             if (err) {
@@ -94,7 +86,7 @@ function addToConf(str) {
             }
             var confStr = handleConfRouStr(data, str);
             fs.writeFileSync(
-                path.resolve('./auto-build-page/addRoute.js'),
+                path.resolve('./src/router/addRoute.js'),
                 confStr,
                 'utf-8',
                 (err) => {

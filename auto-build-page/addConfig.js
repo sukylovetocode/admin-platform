@@ -14,9 +14,8 @@ var addConfig = [
     {
         // 测试生成空白页
         open: true,
-        helloworld: true,
         desc: '自动生成空白页面',
-        name: 'autoHellopage',
+        name: 'autoPage',
     },
 ];
 module.exports = addConfig;

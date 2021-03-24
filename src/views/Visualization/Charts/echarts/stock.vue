@@ -1,10 +1,18 @@
 <template>
-    <div ref="stock" :style="{ width: '650px', height: '450px' }"></div>
+    <v-chart
+        ref="stock"
+        :option="options"
+        :style="{ width: '650px', height: '450px' }"
+    ></v-chart>
 </template>
 
 <script>
-const echarts = require('echarts');
 export default {
+    data() {
+        return {
+            options: {},
+        };
+    },
     mounted() {
         var upColor = '#ec0000';
         var upBorderColor = '#8A0000';
@@ -132,10 +140,7 @@ export default {
             return result;
         }
 
-        // 基于准备好的dom，初始化echarts实例
-        let myChart = echarts.init(this.$refs.stock);
-        // 绘制图表
-        myChart.setOption({
+        this.options = {
             tooltip: {
                 trigger: 'axis',
                 axisPointer: {
@@ -321,7 +326,7 @@ export default {
                     },
                 },
             ],
-        });
+        };
     },
 };
 </script>

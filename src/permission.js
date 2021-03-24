@@ -1,5 +1,5 @@
 import router from './router';
-import { defaultRoutes } from './router';
+import { combineRoutes } from './router';
 import Nprogress from 'nprogress';
 import 'nprogress/nprogress.css';
 import { getCookies } from '@/utils/base';
@@ -23,7 +23,7 @@ router.$addRoutes = (params) => {
     router.matcher = new VueRouter({
         mode: 'history',
         base: process.env.BASE_URL,
-        routes: defaultRoutes,
+        routes: combineRoutes,
     }).matcher;
     router.addRoutes(params);
     // 必须放最后

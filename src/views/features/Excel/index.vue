@@ -1,107 +1,53 @@
 <template>
     <div>
-        <el-button type="primary" @click="handleExport">导出表格</el-button>
-        <a href="https://docs.sheetjs.com/#writing-functions">文档</a>
-        单文件上传：<input type="file" id="fileUp" @change="handleImport" />
-
-        <el-table
-            :data="tableData"
-            stripe
-            style="width: 100%"
-            id="my-table"
-            @selection-change="handleSelectionChange"
-        >
-            <el-table-column type="selection"></el-table-column>
-            <el-table-column
-                v-for="item in tableHead"
-                :prop="item.name"
-                :label="item.label"
-                :key="item.name"
-            ></el-table-column>
-        </el-table>
+        <upload @IMPORT="handleData"></upload>
+        <el-button @click="exportExcel">导出表格</el-button>
+        <normal-table
+            :tableData="tableData"
+            :tableHeader="tableHeader"
+            :noAction="true"
+        ></normal-table>
     </div>
 </template>
 
 <script>
 // eslint-disable-next-line no-unused-vars
 import { createSheets, formatJson } from '@/utils/excel';
-// eslint-disable-next-line no-unused-vars
-import Xlsx from 'xlsx';
+import Upload from '@/components/Excel/upload';
+import NormalTable from '@/components/Table/NormalTable';
 
-const tableHead = [
-    {
-        name: 'date',
-        label: '日期',
-    },
-    {
-        name: 'name',
-        label: '姓名',
-    },
-    {
-        name: 'address',
-        label: '地址',
-    },
-];
-const tableData = [
-    {
-        date: '2016-05-02',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄',
-    },
-    {
-        date: '2016-05-04',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1517 弄',
-    },
-    {
-        date: '2016-05-01',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1519 弄',
-    },
-    {
-        date: '2016-05-03',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1516 弄',
-    },
-];
 export default {
     data() {
         return {
-            tableData,
-            tableHead,
+            tableData: [],
+            tableHeader: [],
             selections: [],
         };
     },
     methods: {
-        handleExport() {
-            // let head = tableHead.map((item) => item.name);
-            // let a = [];
-            // a.push(head);
-            // let data = formatJson(head, tableData);
-            // a.push(...data);
-            createSheets(this.selections, 'excel.xlsx');
-        },
-        handleSelectionChange(rows) {
-            this.selections = rows;
-            console.log(rows);
-        },
-        handleImport(e) {
-            // 获取文档
-            let file = e.target.files[0];
-            let reader = new FileReader();
-            reader.onload = function(e) {
-                let data = e.target.result;
-                let wb = Xlsx.read(data, {
-                    type: 'binary',
+        handleData(data) {
+            let arr = [];
+            data.headers.map((item) => {
+                arr.push({
+                    label: item,
+                    name: item,
                 });
-                console.log(
-                    JSON.stringify(
-                        Xlsx.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]])
-                    )
-                );
-            };
-            reader.readAsBinaryString(file);
+            });
+            this.tableHeader = arr;
+            this.tableData = data.results;
         },
+        exportExcel() {
+            let head = this.tableHeader.map((item) => item.name);
+            let a = [];
+            a.push(head);
+            let data = formatJson(head, this.tableData);
+            a.push(...data);
+            createSheets(a, 'excel.xlsx');
+        },
+    },
+    components: {
+        Upload,
+        NormalTable,
     },
 };
 </script>

@@ -8,6 +8,7 @@
         :h="item.style.height"
         :x="item.style.left"
         :y="item.style.top"
+        :style="{ zIndex: item.style.zIndex }"
     >
         <component
             :is="item.name"
@@ -18,7 +19,7 @@
 </template>
 
 <script>
-import Components from '../components/install';
+import Components from '../comp/install';
 import Vue from 'vue';
 Vue.use(Components);
 import VueDraggableResizable from 'vue-draggable-resizable';

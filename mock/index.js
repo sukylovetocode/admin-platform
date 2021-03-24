@@ -5,10 +5,98 @@ const Router = require('koa-router');
 const router = new Router();
 const cors = require('koa2-cors');
 const bodyParser = require('koa-bodyparser');
+const httpServer = require('http').createServer(app.callback());
+const io = require('socket.io')(httpServer, {
+    cors: {
+        origin: '*',
+    },
+});
 
 app.use(cors());
 app.use(bodyParser());
 app.use(router.routes());
+
+let rooms = ['房间1', '房间2', '房间3', '房间4'];
+let users = [
+    {
+        name: 'cc',
+        room: '房间1',
+    },
+];
+
+function hasUser(user) {
+    let flag = false;
+    users.map((item) => {
+        if (user === item.name) {
+            flag = true;
+        }
+    });
+    return flag;
+}
+
+function getRoomUsers(room) {
+    return users.filter((user) => user.room === room);
+}
+
+function changeRoom(user, newRoom) {
+    let arr = [];
+    users.map((item) => {
+        if (item.name === user) {
+            item.room = newRoom;
+        }
+        arr.push(item);
+    });
+    return arr;
+}
+
+io.on('connection', (socket) => {
+    console.log('链接成功');
+    socket.emit('connect');
+    socket.emit('allRooms', rooms);
+    // 发送现有的房间
+    socket.on('joinRoom', ({ room, user }) => {
+        if (!hasUser(user)) {
+            users.push({
+                name: user,
+                room,
+            });
+        }
+        // 分组
+        socket.join(room);
+
+        // 成功回调
+        io.to(room).emit('successJoin', {
+            roomUsers: getRoomUsers(room),
+            room,
+        });
+        // 全局广播(除了自己)
+        socket.broadcast
+            .to(room)
+            .emit('message', `welcome ${user} has joined the chating room`);
+    });
+    // 接受消息
+    socket.on('sendMsg', ({ nowRoom, message, user }) => {
+        // 对整个房间每个人都发送(不包括本人)
+        // socket.broadcast.to(nowRoom).emit('msg', { nowRoom, message, user });
+        // 对整个房间每个人都发送(包括本人)
+        io.to(nowRoom).emit('msg', { nowRoom, message, user });
+    });
+    socket.on('leaveJoin', ({ oldRoom, newRoom, user }) => {
+        socket.leave(oldRoom);
+        socket.join(newRoom);
+
+        changeRoom(user, newRoom);
+
+        io.to(newRoom).emit('successJoin', {
+            roomUsers: getRoomUsers(newRoom),
+            room: newRoom,
+        });
+        // 全局广播(除了自己)
+        socket.broadcast
+            .to(newRoom)
+            .emit('message', `welcome ${user} has joined the chating room`);
+    });
+});
 
 router.post('/api/user/login', (ctx) => {
     const roles = [
@@ -274,6 +362,6 @@ router.get('/api/user/permission', (ctx) => {
     };
 });
 
-app.listen(3000, () => {
+httpServer.listen(3000, () => {
     console.log('we are now listening to 3000');
 });

@@ -1,14 +1,6 @@
 {
   path: '%path%',
-  component: () => import('@/layouts/baseLayout.vue'),
+  component: () =>
+       import('%requirepath%'),
   name: '%name%',
-  redirect: { path: '%repath%' },
-  children: [
-    {
-      path: '%repath%',
-      component: (resolve) =>
-        require(['%requirepath%'], resolve),
-      name: '%name2%'
-    }
-  ]
 },

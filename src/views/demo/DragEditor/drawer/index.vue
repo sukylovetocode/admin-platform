@@ -1,13 +1,15 @@
 <template>
     <div class="wrapper">
         <div class="web-container">
-            <span
-                v-for="(item, index) in data"
-                :key="index"
-                @click="handleActiveItem(item)"
-            >
-                <Drag :item="item" @drag="drag"></Drag>
-            </span>
+            <div v-if="data.length">
+                <span
+                    v-for="(item, index) in data"
+                    :key="index"
+                    @click="handleActiveItem(index)"
+                >
+                    <Drag :item="item" @drag="drag"></Drag>
+                </span>
+            </div>
         </div>
     </div>
 </template>
@@ -24,10 +26,10 @@ export default {
     methods: {
         drag(item) {
             // 保存改变
-            console.log(item);
+            this.$store.dispatch('editor/change', item);
         },
-        handleActiveItem(item) {
-            this.$emit('active_item', item);
+        handleActiveItem(index) {
+            this.$store.dispatch('editor/active_item', index);
         },
     },
 };

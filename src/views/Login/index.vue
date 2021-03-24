@@ -113,7 +113,7 @@ export default {
                     duration: 1.5,
                     onComplete: function() {
                         that.$router.push(
-                            '/features/excel' || this.$route.params.redirect
+                            '/features' || this.$route.params.redirect
                         );
                     },
                     ease: 'expo.out',

@@ -33,6 +33,7 @@ import {
     Dialog,
     Drawer,
     Radio,
+    Upload,
 } from 'element-ui';
 
 Vue.use(Container);
@@ -66,5 +67,6 @@ Vue.use(Switch);
 Vue.use(Dialog);
 Vue.use(Drawer);
 Vue.use(Radio);
+Vue.use(Upload);
 
 Vue.prototype.$message = Message;

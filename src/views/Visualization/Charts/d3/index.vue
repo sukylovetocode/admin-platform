@@ -102,13 +102,21 @@ export default {
                 .select('#chart')
                 .attr('width', SVG_WID)
                 .attr('height', SVG_HEI);
+            this.chart
+                .append('clipPath')
+                .attr('id', 'mask')
+                .append('rect')
+                .attr('x', margin.left)
+                .attr('y', margin.top)
+                .attr('width', SVG_WID - margin.left - margin.right)
+                .attr('height', SVG_HEI - margin.top - margin.bottom);
 
             // 绘制堆叠面积图数据处理
             let series = d3.stack().keys(['train', 'ship', 'plane', 'truck'])(
                 this.dealData
             );
             // x轴
-            let xScale = d3
+            this.xScale = d3
                 .scaleTime()
                 .range([0, SVG_WID - margin.left - margin.right])
                 .domain(
@@ -116,8 +124,8 @@ export default {
                         return d.day;
                     })
                 );
-            let xAxis = d3
-                .axisBottom(xScale)
+            this.xAxis = d3
+                .axisBottom(this.xScale)
                 // 刻度格式
                 .tickFormat(d3.timeFormat('%Y年%m月'))
                 .tickSizeInner(6)
@@ -133,7 +141,7 @@ export default {
                         (SVG_HEI - margin.bottom) +
                         ')'
                 )
-                .call(xAxis);
+                .call(this.xAxis);
             // y轴
             let yScale = d3
                 .scaleLinear()
@@ -156,11 +164,11 @@ export default {
                 .style('fill', '#000')
                 .text('货运量(万吨)');
             // 绘制堆叠面积图
-            let mainAreaPath = d3
+            this.mainAreaPath = d3
                 .area()
                 .curve(d3.curveMonotoneX)
                 .x((d) => {
-                    return xScale(d.data.day);
+                    return this.xScale(d.data.day);
                 })
                 .y0((d) => {
                     return yScale(d[0]);
@@ -169,13 +177,15 @@ export default {
                     return yScale(d[1]);
                 });
             let color = d3.scaleOrdinal(d3.schemeCategory10);
+
             this.chart
                 .append('g')
+                .attr('clip-path', 'url(#mask)')
                 .selectAll('path')
-                .attr('class', 'area')
                 .data(series)
                 .join('path')
-                .attr('d', mainAreaPath)
+                .attr('class', 'area')
+                .attr('d', this.mainAreaPath)
                 .attr(
                     'transform',
                     'translate(' + margin.left + ',' + margin.top + ')'
@@ -185,9 +195,42 @@ export default {
                 .attr('fill', function(d, i) {
                     return color(i);
                 });
-            this.subChart(); // 绘制滑动框
+
+            let x2Scale = d3
+                .scaleTime()
+                .range([0, SVG_WID])
+                .domain(this.xScale.domain());
+
+            const zoomed = (event) => {
+                //t为随着滚轮缩放的动态比例值包含缩放信息k以及transform信息x和y
+                //通过t上的rescaleX方法重新定义动态的domain且绑定至xScale
+                let t = event.transform;
+                //通过t上的rescaleX方法重新定义动态的domain且绑定至xScale
+                this.xScale.domain(t.rescaleX(x2Scale).domain());
+                //重新绘制面积图与坐标轴
+                this.chart.selectAll('.area').attr('d', this.mainAreaPath);
+                this.chart.select('.xAxis').call(this.xAxis);
+            };
+
+            //定义缩放zoom
+            let zoom = d3
+                .zoom() // 设置zoom
+                //设置缩放倍数
+                .scaleExtent([1, 8])
+                //设置transform的范围
+                .translateExtent([
+                    [margin.left, -Infinity],
+                    [SVG_WID - margin.left - margin.right, Infinity],
+                ])
+                //设置缩放的视口的大小; 注:此时视口大小与transform范围一样说明无法拖动只可滚轮缩放
+                .extent([
+                    [margin.left, 0],
+                    [SVG_WID - margin.right, SVG_HEI],
+                ])
+                .on('zoom', zoomed);
+
+            this.chart.call(zoom);
         },
-        subChart() {},
     },
 };
 </script>

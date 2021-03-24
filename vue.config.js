@@ -1,3 +1,7 @@
+const path = require('path');
+
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
+    .BundleAnalyzerPlugin;
 module.exports = {
     devServer: {
         proxy: {
@@ -18,7 +22,7 @@ module.exports = {
                     '^/getAccessToken': '',
                 },
             },
-            userInfo: {
+            '/userInfo': {
                 target: 'https://api.github.com/user',
                 changeOrigin: true,
                 pathRewrite: {
@@ -32,5 +36,24 @@ module.exports = {
             'ScrollMagic',
             'scrollmagic/scrollmagic/uncompressed/ScrollMagic.js'
         );
+    },
+    configureWebpack: (config) => {
+        if (process.env.NODE_ENV === 'production') {
+            config.plugins.push(new BundleAnalyzerPlugin());
+        }
+    },
+    // configureWebpack: {
+    //     plugins: [new BundleAnalyzerPlugin()],
+    // },
+    pluginOptions: {
+        'style-resources-loader': {
+            preProcessor: 'sass',
+            patterns: [
+                path.resolve(__dirname, './src/assets/styles/*.scss'), //你的.scss文件所在目录
+            ],
+        },
+    },
+    css: {
+        extract: false,
     },
 };

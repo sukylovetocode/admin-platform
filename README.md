@@ -7,7 +7,7 @@
 [x] 全局颜色更换
 [x] 支持国际化
 [x] 富文本编辑/MD 写法切换
-[ ] 渲染表格以及能够导入及导出 Excel 表格
+[x] 渲染表格以及能够导入及导出 Excel 表格
 [x] 第三方登录
 [X] 复制粘贴功能
 [X] 全屏展示
@@ -16,31 +16,38 @@
 [x] 按需引入 Element-ui
 [x] 图片懒加载
 [X] 日程表
-[ ] 可视化编辑器
-[ ] 钉钉审批功能
-[ ] 组合图表展示
+[X] 可视化编辑器
+[x] 组合图表展示
 [x] 三维物体更换颜色
-[ ] 滚动动画
-[ ] 视差动画
-[ ] 视频聊天 demo
+[x] 聊天 demo
 [x] 表格封装
-[ ] 支持 scss
+[x] 支持 scss
+
+### HOC 与 mixin
+
+### ehart 按需引入
+
+### 分析 build 性能
+
+`npm i webpack-bundle-analyzer`
+
+```javascript
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
+    .BundleAnalyzerPlugin
+
+configureWebpack: {
+    plugins: [new BundleAnalyzerPlugin()],
+},
+```
 
 ### 支持 scss
 
-最近在项目中需要用到 sass，安装 sass-loader 后发生错误：
-
-`ERROR Error: Rule can only have one resource source (provided resource and test + include + exclude) in {`
-
-可能的原因就是默认的 sass 或者 webpack 版本太高了，从而导致不兼容，把之前的高版本卸载，安装低版本就行
-
-安装低版本的 sass-loader 命令：`npm install sass-loader@7.3.1 --save-dev`
-
-还不行的话：
-
-卸载当前版本 webpack 命令：`npm uninstall webpack`
-
-安装低版本的 webpack 命令：`npm install webpack@^4.0.0 --save-dev`
+报错太多，概括一下就是各个版本冲突来冲突去
+VUE-CLI4.5.0 如何安装我们的 scss
+`npm install style-resources-loader vue-cli-plugin-style-resources-loader`
+`npm install node-sass@4.0.0 sass-loader@7.3.1`
+`npm install webpack@4.5.0`
+vue-cli 现在只用的 webpack@4 的版本 别盲目升级
 
 ### 三维物体更换颜色
 

@@ -13,7 +13,6 @@
                     </el-dropdown-item>
                 </el-dropdown-menu>
             </el-dropdown>
-            <div class="header_search"><el-input></el-input></div>
             <i
                 class="el-icon-full-screen full-btn"
                 @click="handleFullScreen"

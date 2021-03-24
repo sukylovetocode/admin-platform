@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-// import addRoute from '../../auto-build-page/addRoute.js';
+import addRoute from './addRoute';
 
 // 解决ElementUI导航中VUE-ROUTER在3.0版本重复点菜单报错
 const originalPush = VueRouter.prototype.push;
@@ -9,7 +9,7 @@ VueRouter.prototype.push = function push(location) {
 };
 
 Vue.use(VueRouter);
-export const defaultRoutes = [
+const defaultRoutes = [
     {
         path: '/',
         component: { render: (h) => h('router-view') },
@@ -48,11 +48,12 @@ export const defaultRoutes = [
         ],
     },
 ];
+export const combineRoutes = [...defaultRoutes, ...addRoute];
 
 const router = new VueRouter({
     mode: 'history',
     base: process.env.BASE_URL,
-    routes: defaultRoutes,
+    routes: combineRoutes,
 });
 
 export default router;
